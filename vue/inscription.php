@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Ajouter un Utilisateur</title>
+<link href="/Public/style/inscription.css" rel="stylesheet" />
 </head>
 <body>
 

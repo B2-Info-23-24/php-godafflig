@@ -22,6 +22,7 @@
     <div class="div vitrine">
 
     </div>
+    
 </body>
 
 </html>

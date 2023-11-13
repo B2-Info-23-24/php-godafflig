@@ -4,6 +4,7 @@
 // require_once 'vendor/autoload.php'; // Assurez-vous que le chemin est correct
 // $loader = new \Twig\Loader\FilesystemLoader('vue/helloworld.twig'); // Chemin vers vos templates
 // echo $twig->render('helloworld.twig', ['message' => 'Hello World']);
+//http://172.21.41.167:8080/
 $request = $_SERVER['REQUEST_URI'];
 switch ($request) {
   case '/':
