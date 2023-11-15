@@ -1,8 +1,10 @@
-<!-- header.ting -->
-  <header>
-        <ul>
-            <li><button><a href="/home">home</button></a></li>
-            <li><button><a href="/inscription">inscription</button></a></li>
-            <li><button><a href="/Myaccount">Myaccount</button></a></li>
-        </ul>
-    </hea
+{% extends "home.twig" %}
+{% block header %}
+<header>
+    <ul>
+        <li><button><a href="/home">home</button></a></li>
+        <li><button><a href="/inscription">inscription</button></a></li>
+        <li><button><a href="/Myaccount">Myaccount</button></a></li>
+    </ul>
+</header>
+{% endblock %}
