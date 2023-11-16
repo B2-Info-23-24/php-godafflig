@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<h1>
+		mes annonces
+	</h1>
+    <div class="vitrine_voiture">
+	<div class="voiture">
+		<ul>
+			{% for ligne in donnees %}
+				<li>
+					-{{ ligne.brand }}
+					-{{ ligne.color }}
+					{{ ligne.priceday  }}€</li>
+
+                    <button>reserver ce vehicule</button>
+			{% endfor %}
+		</ul>
+	</div>
+    </div>
+{% endblock %}

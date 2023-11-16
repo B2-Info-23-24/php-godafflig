@@ -1,7 +1,7 @@
 body {
     /* Existing styles */
     position: relative; /* Add this to make the ::after positioned relatively to the body */
-    overflow: hidden; /* In case the overlay causes scrollbars */
+    overflow: auto;
 }
 
 body::after {
@@ -14,6 +14,7 @@ body::after {
     background: radial-gradient(circle at top left, #34264f 0%, transparent 70%);
     pointer-events: none; /* Permet de cliquer à travers l'overlay */
     z-index: -1; /* S'assure que l'overlay est derrière les autres contenus */
+    
 }
 
 form {

@@ -3,14 +3,20 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
-		{% block title %}{% endblock %}
+		<title>
+			{% block title %}Mes annonces
+			{% endblock %}
+		</title>
+
 		{% block stylesheet %}{% endblock %}
+		<link rel="stylesheet" href="/Public/style/home.css">
+		<link href="/Public/style/inscription.css" rel="stylesheet" />
+		<link href="/Public/style/profil.css" rel="stylesheet" />
 		
 	</head>
 	<body>
-		{% block body %}
-		
-		{% endblock %}
+		{# {% include 'header/header.twig' %} #}
+		{% block header %}{% endblock %}
+		{% block body %}{% endblock %}
 	</body>
 </html>

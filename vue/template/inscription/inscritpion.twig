@@ -1,16 +1,10 @@
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Ajouter un Utilisateur</title>
-<link href="/Public/style/inscription.css" rel="stylesheet" />
-</head>
-<body>
+{% extends "base.html.twig" %}
+{% block body %}
 
 <h2>Ajouter un Utilisateur</h2>
 
-<form action="/gestionnaire-inscription" method="post">
+<form action="/inscription" method="post">
   <label for="username">Nom d'utilisateur:</label><br>
   <input type="text" id="username" name="username" required><br>
   
@@ -35,5 +29,6 @@
   <input type="submit" value="Ajouter l'utilisateur">
 </form>
 
-</body>
-</html>
+{% endblock %}
+
+
