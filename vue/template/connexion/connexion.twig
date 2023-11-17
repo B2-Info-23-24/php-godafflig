@@ -1,17 +1,15 @@
-
 {% extends "base.html.twig" %}
 {% block body %}
 
-<h2>Ajouter un Utilisateur</h2>
+<h2>Connecter un utilisateur</h2>
 
-<form action="/inscription" method="post">
+<form action="createCookie.php" method="post"> <!-- Remarquez l'action modifiée ici -->
   <label for="username">Nom d'utilisateur:</label><br>
-  <input type="text" id="username" name="username" required><br>
+  <input type="text" id="username" name="username" required value="userTest"><br> <!-- Valeur en dur -->
   
   <label for="password">Mot de passe:</label><br>
-  <input type="password" id="password" name="password" required><br>
+  <input type="password" id="password" name="password" required value="passTest"><br> <!-- Valeur en dur -->
   <input type="submit" value="Ajouter l'utilisateur">
 </form>
 
 {% endblock %}
-

@@ -2,7 +2,7 @@
 
 // UserController.php
 require 'vendor/autoload.php';
-require_once 'modele/dataFetcher.php';
+require_once 'database/databaseconnexion.php';
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -21,7 +21,15 @@ class HomeController {
     
 }
     public function show() {
-        $donnees = datafetchervehicules();
+        
+        $sql = "SELECT * FROM vehicules";
+
+        $donnees = (request($sql));
+        //print_r($donnees);
+
+        echo $donnees[1]['brand'];
+
+
         // Charger et afficher le template avec les données
         $this->twig->display('header/header.twig');
       

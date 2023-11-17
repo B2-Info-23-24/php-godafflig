@@ -18,9 +18,7 @@ require_once __DIR__ . '/vendor/autoload.php';
   require_once __DIR__ . '/controller/inscriptionController.php';
   require_once __DIR__ . '/controller/MyAccountController.php';
 
-$homeController = new HomeController();
-$inscriptionController = new inscriptionController();
-$MyAccountController = new MyAccountController();
+
 
 $routes = [
     '/' => ['controller' => 'HomeController', 'method' => 'show'],
