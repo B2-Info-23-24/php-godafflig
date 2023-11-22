@@ -3,7 +3,7 @@
 namespace App\Controller;
 // UserController.php
 require 'vendor/autoload.php';
-require_once 'database/DatabaseManager.php';
+require_once 'Database/DatabaseManager.php';
 
 
 use Twig\Environment;

@@ -11,8 +11,8 @@ use UserManager;
 
 
 // Assurez-vous d'inclure UserManager ici
-require_once __DIR__ . '/../modele/UserManager.php'; // Chemin d'accès à UserManager
-require_once 'database/DatabaseManager.php';
+require_once __DIR__ . '/../Modele/UserManager.php'; // Chemin d'accès à UserManager
+require_once 'Database/DatabaseManager.php';
 
 class inscriptionController
 {

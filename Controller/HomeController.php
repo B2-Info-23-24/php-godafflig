@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 require 'vendor/autoload.php'; // C'est tout ce dont vous avez besoin avec Composer
-require_once 'database/DatabaseManager.php';
+require_once 'Database/DatabaseManager.php';
 
 
 use App\Database\DatabaseManager;

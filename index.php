@@ -1,32 +1,39 @@
 <?php
-
-
+use App\Model\InitDb;
+include __DIR__ . "/Modele/InitDB.php";
 // $loader = new \Twig\Loader\FilesystemLoader('vue/helloworld.twig'); // Chemin vers vos templates
 // echo $twig->render('helloworld.twig', ['message' => 'Hello World']);
 //http://172.21.41.167:8080/
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
 
+$initDb = new InitDb();
+$initDb->createTable();
+$initDb->closeConnection();
 
 require_once __DIR__ . '/vendor/autoload.php';
- 
+
 
 
 // Assurez-vous que ce chemin est correct   
 
 
-  require_once __DIR__ . '/controller/HomeController.php';
-  require_once __DIR__ . '/controller/InscriptionController.php';
-  require_once __DIR__ . '/controller/MyAccountController.php';
-  require_once __DIR__ . '/controller/ConnexionController.php';
-  require_once __DIR__ . '/controller/testController.php';
+require_once __DIR__ . '/Controller/HomeController.php';
+require_once __DIR__ . '/Controller/InscriptionController.php';
+require_once __DIR__ . '/Controller/MyAccountController.php';
+require_once __DIR__ . '/Controller/ConnexionController.php';
 
 
-  $routes = [
+
+
+// Initialisation de la base de données
+
+
+
+$routes = [
     '/' => ['controller' => 'App\\Controller\\HomeController'],
     '/home' => ['controller' => 'App\\Controller\\HomeController'],
     '/inscription' => ['controller' => 'App\\Controller\\InscriptionController'],
     '/connexion' => ['controller' => 'App\\Controller\\ConnexionController'],
-    '/test' => ['controller' => 'App\\Controller\\testController', 'method'],
     '/login' => ['controller' => 'App\\Controller\\ConnexionController', 'method' => 'login'],
     '/register' => ['controller' => 'App\\Controller\\InscriptionController', 'method' => 'register'],
     '/Myaccount' => ['controller' => 'App\\Controller\\MyAccountController']
@@ -44,16 +51,14 @@ if (array_key_exists($request, $routes)) {
         $methodName = $routes[$request]['method'];
         $controller->$methodName();
     } else {
-        if(method_exists($controller, 'index')) {
+        if (method_exists($controller, 'index')) {
             $controller->index();
         } else {
-           
+
             // echo "PAS DE METHODE TROUVER";
             http_response_code(404);
         }
     }
 } else {
     http_response_code(404);
-   
 }
-

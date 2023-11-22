@@ -1,5 +1,6 @@
 <?php
 
+require 'vendor/autoload.php';
 class UserManager
 {
     public $conn;
@@ -9,7 +10,7 @@ class UserManager
         $this->conn = $databaseConnection;
 
 
-        if (!$this->conn instanceof mysqli) {
+        if (!$this->conn instanceof \mysqli) {
             die("Erreur de connexion à la base de données.");
         }
        
