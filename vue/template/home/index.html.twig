@@ -3,18 +3,17 @@
 	<h1>
 		mes annonces
 	</h1>
-    <div class="vitrine_voiture">
-	<div class="voiture">
-		<ul>
-			{% for ligne in donnees %}
-				<li>
-					-{{ ligne.brand }}
-					-{{ ligne.color }}
-					{{ ligne.priceday  }}€</li>
-
-                    <button>reserver ce vehicule</button>
-			{% endfor %}
-		</ul>
+	<div class="vitrine_voiture">
+		<div class="voiture">
+			<ul>
+				{% for ligne in donnees %}
+					<li>
+						-{{ ligne.brand }}
+						-{{ ligne.color }}
+						{{ ligne.priceday  }}€</li>
+					<button>reserver ce vehicule</button>
+				{% endfor %}
+			</ul>
+		</div>
 	</div>
-    </div>
 {% endblock %}

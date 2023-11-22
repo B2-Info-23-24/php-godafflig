@@ -15,28 +15,45 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 
   require_once __DIR__ . '/controller/HomeController.php';
-  require_once __DIR__ . '/controller/inscriptionController.php';
+  require_once __DIR__ . '/controller/InscriptionController.php';
   require_once __DIR__ . '/controller/MyAccountController.php';
+  require_once __DIR__ . '/controller/ConnexionController.php';
+  require_once __DIR__ . '/controller/testController.php';
 
 
-
-$routes = [
-    '/' => ['controller' => 'HomeController', 'method' => 'show'],
-    '/home' => ['controller' => 'HomeController', 'method' => 'show'],
-    '/inscription' => ['controller' => 'inscriptionController', 'method' => 'register'],
-    '/connexion' => ['controller' => 'connexionController', 'method' => 'login'],
-    '/Myaccount' => ['controller' => 'MyAccountController', 'method' => 'MyAccount']
+  $routes = [
+    '/' => ['controller' => 'App\\Controller\\HomeController'],
+    '/home' => ['controller' => 'App\\Controller\\HomeController'],
+    '/inscription' => ['controller' => 'App\\Controller\\InscriptionController'],
+    '/connexion' => ['controller' => 'App\\Controller\\ConnexionController'],
+    '/test' => ['controller' => 'App\\Controller\\testController', 'method'],
+    '/login' => ['controller' => 'App\\Controller\\ConnexionController', 'method' => 'login'],
+    '/register' => ['controller' => 'App\\Controller\\InscriptionController', 'method' => 'register'],
+    '/Myaccount' => ['controller' => 'App\\Controller\\MyAccountController']
 ];
+
 
 $request = $_SERVER['REQUEST_URI'];
 
 if (array_key_exists($request, $routes)) {
     $controllerName = $routes[$request]['controller'];
-    $methodName = $routes[$request]['method'];
     $controller = new $controllerName();
-    $controller->$methodName();
+
+    // Vérifiez d'abord si la clé 'method' existe et si c'est une chaîne
+    if (isset($routes[$request]['method']) && is_string($routes[$request]['method'])) {
+        $methodName = $routes[$request]['method'];
+        $controller->$methodName();
+    } else {
+        if(method_exists($controller, 'index')) {
+            $controller->index();
+        } else {
+           
+            // echo "PAS DE METHODE TROUVER";
+            http_response_code(404);
+        }
+    }
 } else {
     http_response_code(404);
-    
+   
 }
 

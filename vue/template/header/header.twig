@@ -1,13 +1,38 @@
 {% extends "base.html.twig" %}
 {% block header %}
-<div class="header">
-    <ul>
-        <li><button><a href="/home">home</button></a></li>
-        <li><button><a href="/inscription">inscription</button></a></li>
-        <li><button><a href="/Myaccount">Myaccount</button></a></li>
-        <li><button><a href=" /connexion">connexion</button></a></li>
-        /connexion
+	<div class="header">
+		<ul>
+			{% if isUserLoggedIn %}
+				
+				<li>
+					<button>
+						<a href="/Myaccount">Myaccount</button>
+					</a>
+				</li>
+				<li>
+					<button>
+						<a href="/deconnexion">deconnexion</button>
+					</a>
+				</li>
+			{% else %}
+				<li>
+					<button>
+						<a href="/inscription">inscription</button>
+					</a>
+				</li>
 
-    </ul>
-</div>
+				<li>
+					<button>
+						<a href=" /connexion">connexion</button>
+					</a>
+				</li>
+                <li>
+					<button>
+						<a href="/home">home</button>
+					</a>
+				</li>
+			{% endif %}
+
+		</ul>
+	</div>
 {% endblock %}
