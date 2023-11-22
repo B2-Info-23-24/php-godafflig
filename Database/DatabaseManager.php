@@ -26,7 +26,10 @@ class DatabaseManager
         if ($params) {
             $stmt->bind_param(...$params);
         }
-
+        if (!$stmt) {
+            // Gestion de l'erreur
+            die("Erreur de préparation de la requête: " . $this->conn->error);
+        }
         $stmt->execute();
         $result = $stmt->get_result();
 
