@@ -17,7 +17,6 @@ class InitDb
         $password = "password";
         $database = "database";
         $this->conn = new \mysqli($servername, $username, $password, $database);
-
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
@@ -32,6 +31,7 @@ class InitDb
     public function createTable()
     {
         $sqlStatements = [
+
             "CREATE TABLE IF NOT EXISTS `brand` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `text` varchar(255) DEFAULT NULL,
@@ -58,19 +58,19 @@ class InitDb
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
             "CREATE TABLE IF NOT EXISTS vehicules (
-    id int(11) NOT NULL AUTO_INCREMENT,
-    'nbOfseat_id' int(11) DEFAULT NULL UNIQUE,
-    'review_id' int(11) DEFAULT NULL UNIQUE,
-    'color_id' int(11) DEFAULT NULL UNIQUE,
-    'priceDay' int(11) DEFAULT NULL ,
-    'image' varchar(255) DEFAULT NULL,
-    'brand_id' int(11) DEFAULT NULL UNIQUE, -- Ajout de la colonne brand_id
-    PRIMARY KEY (id),
-    FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id),
-    FOREIGN KEY (review_id) REFERENCES review(id),
-    FOREIGN KEY (color_id) REFERENCES color(id),
-    FOREIGN KEY (brand_id) REFERENCES brand(id) -- Définition de la clé étrangère pour brand_id
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+            id int(11) NOT NULL AUTO_INCREMENT,
+            'nbOfseat_id' int(11) DEFAULT NULL UNIQUE,
+            'review_id' int(11) DEFAULT NULL UNIQUE,
+            'color_id' int(11) DEFAULT NULL UNIQUE,
+            'priceDay' int(11) DEFAULT NULL ,
+            'image' varchar(255) DEFAULT NULL,
+            'brand_id' int(11) DEFAULT NULL UNIQUE, -- Ajout de la colonne brand_id
+            PRIMARY KEY (id),
+            FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id),
+            FOREIGN KEY (review_id) REFERENCES review(id),
+            FOREIGN KEY (color_id) REFERENCES color(id),
+         FOREIGN KEY (brand_id) REFERENCES brand(id) -- Définition de la clé étrangère pour brand_id
+)        ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
 
             "CREATE TABLE IF NOT EXISTS `vehicule_color` (
@@ -101,14 +101,26 @@ class InitDb
               `isAdmin` tinyint(1) DEFAULT '0',
               PRIMARY KEY (`id`),
               CONSTRAINT unique_email_phoneNumber UNIQUE (`email`, `phoneNumber`)
-            ) ENGINE = InnoDB AUTO_INCREMENT = 14 DEFAULT CHARSET = latin1"
+            ) ENGINE = InnoDB AUTO_INCREMENT = 14 DEFAULT CHARSET = latin1",
+
+            "CREATE TABLE IF NOT EXISTS `reservations` (
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `user_id` int(10) unsigned NOT NULL, -- L'ID de l'utilisateur associé à la réservation
+            `vehicle_id` int(11) NOT NULL, -- L'ID du véhicule associé à la réservation
+            `start_date` DATE NOT NULL, -- Date de début de la réservation
+            `end_date` DATE NOT NULL, -- Date de fin de la réservation
+            -- Ajoutez d'autres colonnes si nécessaire
+            PRIMARY KEY (`id`),
+            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+            FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
         ];
         // Execute each SQL statement
         foreach ($sqlStatements as $sql) {
             try {
                 $this->conn->query($sql);
             } catch (Exception $e) {
-                echo $e->getMessage();
+                echo "Erreur lors de l'exécution de la requête SQL : " . $e->getMessage();
             }
         }
         // $this->addFakeUser();

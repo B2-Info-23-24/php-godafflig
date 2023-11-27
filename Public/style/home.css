@@ -12,7 +12,7 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 200px;/
+    height: 100px;
 }
 
 .menu_right {
@@ -52,3 +52,78 @@ ul {
     justify-content: center;
     list-style: none;
 }
+.sidebar {
+    width: 300px;
+    position: fixed;
+    left: 0;
+    top: 100px;
+    height: 100%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0px 5px rgba(0,0,0,0.2);
+    overflow-y: auto;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h3 {
+    margin-bottom: 10px;
+}
+
+.checkbox {
+    margin-bottom: 5px;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 10px;
+}
+.main-container {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-filter {
+    /* Adjust width as needed for your filter sidebar */
+    width: 200px; /* Example width */
+    /* If you want the sidebar to always be visible on scroll: */
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.vehicle-container {
+    flex-grow: 1;
+    max-width: 800px; /* Adjust this value based on your desired maximum width */
+    padding-left: 220px; /* Adjust so the content does not overlap the sidebar */
+}
+
+.vehicle-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Center text and content within each vehicle item */
+}
+
+.vehicle-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+

@@ -46,7 +46,7 @@ class MyAccountController
     public function disconnect()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            echo '<meta http-equiv="refresh" content="0">';
+            // echo '<meta http-equiv="refresh" content="0">';
             unset($_SESSION['userSession']);
             $_SESSION = array();
             session_destroy();

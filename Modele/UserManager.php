@@ -1,5 +1,5 @@
 <?php
-// session_start();
+session_start();
 require 'vendor/autoload.php';
 class UserManager
 {
@@ -27,20 +27,16 @@ class UserManager
         $query->bind_param("sssss", $last_name, $first_name, $email, $password, $phone_number);
         $query->execute();
         $query->close();
-
-
-        // Optionnel: Vous pouvez choisir de ne pas fermer la connexion ici, 
-        // surtout si vous prévoyez d'effectuer plusieurs opérations avec la même connexion.
     }
     public function userIsInDb($email, $password)
     {
-        
+
         $stmt = $this->conn->prepare("SELECT id, email, firstName, lastName FROM users WHERE email = ? ");
         if ($stmt === false) {
             die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
         }
 
-        $stmt->bind_param("s", $email); // Assurez-vous de hacher le mot de passe avant la comparaison si nécessaire
+        $stmt->bind_param("s", $email);
         $stmt->execute();
 
         // Récupération du résultat
@@ -58,9 +54,7 @@ class UserManager
             ];
 
             echo "Utilisateur connecté avec succès";
-          
         } else {
-            // Utilisateur non trouvé
             echo "Nom d'utilisateur ou mot de passe incorrect";
         }
         $stmt->close();
@@ -68,7 +62,6 @@ class UserManager
     public function getUserSession()
     {
         if (isset($_SESSION['userSession'])) {
-            // Assurez-vous de valider et de nettoyer les données de session selon vos besoins
             return $_SESSION['userSession'];
         }
         return null;

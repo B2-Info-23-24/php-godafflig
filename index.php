@@ -7,7 +7,9 @@ include __DIR__ . "/Modele/InitDB.php";
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
 
 $initDb = new InitDb();
-// $initDb->initializeDatabaseWithData();
+//$initDb->initializeDatabaseWithData();
+$initDb->createTable();
+
 $initDb->closeConnection();
 
 require_once __DIR__ . '/vendor/autoload.php';

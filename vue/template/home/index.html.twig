@@ -1,19 +1,75 @@
 {% extends "base.html.twig" %}
 {% block body %}
-	<h1>
-		mes annonces
-	</h1>
-	<div class="vitrine_voiture">
-		<div class="voiture">
-			<ul>
-				{% for ligne in donnees %}
-					<li>
-						-{{ ligne.brand }}
-						-{{ ligne.color }}
-						{{ ligne.priceday  }}€</li>
-					<button>reserver ce vehicule</button>
-				{% endfor %}
-			</ul>
+	<div class="main-container">
+		<aside class="sidebar">
+			<form
+				class="filter" action="/filter" method="get">
+				<!-- Brand Filter -->
+				<div class="filter-section">
+					<h3>Brands</h3>
+					{% set brands = ['Nissan', 'Renault', 'Volvo', 'Tesla', 'Fiat', 'Peugeot', 'Volkswagen', 'Ferrari', 'Hyundai', 'Kia'] %}
+					{% for brand in brands %}
+						<div class="checkbox">
+							<input type="checkbox" id="brand-{{ brand }}" name="brand[]" value="{{ brand }}">
+							<label for="brand-{{ brand }}">{{ brand }}</label>
+						</div>
+					{% endfor %}
+				</div>
+
+				<!-- Number of Seats Filter -->
+				<div class="filter-section">
+					<h3>Number of Seats</h3>
+					{% set seats = [2, 3, 4, 5, 7, 9] %}
+					{% for seat in seats %}
+						<div class="checkbox">
+							<input type="checkbox" id="seats-{{ seat }}" name="seats[]" value="{{ seat }}">
+							<label for="seats-{{ seat }}">{{ seat }}</label>
+						</div>
+					{% endfor %}
+				</div>
+
+				<!-- Color Filter -->
+				<div class="filter-section">
+					<h3>Colors</h3>
+					{% set colors = ['Rouge', 'Blanc', 'Gris', 'Noir', 'Noir mat', 'Bleu turquoise', 'Bleu marine'] %}
+					{% for color in colors %}
+						<div class="checkbox">
+							<input type="checkbox" id="color-{{ color }}" name="color[]" value="{{ color }}">
+							<label for="color-{{ color }}">{{ color }}</label>
+						</div>
+					{% endfor %}
+				</div>
+
+				<!-- Price Filter -->
+				<div class="filter-section">
+					<h3>Price (Max)</h3>
+					<input type="range" id="price" name="price" min="0" max="500" oninput="this.nextElementSibling.value = this.value">
+					<output>250</output>
+				</div>
+
+				<!-- Submit Button for Filters -->
+				<div class="filter-section">
+					<input type="submit" value="Apply Filters">
+				</div>
+			</form>
+		</aside>
+		<div class="vehicle-container">
+			{% for vehicule in vehicules %}
+				<div class="vehicle-item">
+					<h3>Vehicule ID:
+						{{ vehicule.id }}</h3>
+					<p>Number of Seats:
+						{{ vehicule.numberOfSeats }}</p>
+					<p>Review ID:
+						{{ vehicule.review_id }}</p>
+					<p>Color:
+						{{ vehicule.colorName }}</p>
+					<p>Price per Day:
+						{{ vehicule.priceDay }}</p>
+					<img src="{{ vehicule.image }}" alt="vehicule Image" class="vehicule-image">
+					<button onclick="location.href='/rental/{{ vehicule.id }}'">Rent Vehicle</button>
+				</div>
+			{% endfor %}
 		</div>
 	</div>
 {% endblock %}
