@@ -1,38 +1,33 @@
 {% extends "base.html.twig" %}
 {% block header %}
 	<div class="header">
-		<ul>
-			{% if isUserLoggedIn %}
-				
-				<li>
-					<button>
-						<a href="/Myaccount">Myaccount</button>
-					</a>
-				</li>
-				<li>
-					<button>
-						<a href="/deconnexion">deconnexion</button>
-					</a>
-				</li>
-			{% else %}
-				<li>
-					<button>
-						<a href="/inscription">inscription</button>
-					</a>
-				</li>
 
-				<li>
-					<button>
-						<a href=" /connexion">connexion</button>
-					</a>
+		{% if user is null %}
+			<ul class="menu" >
+				<li class="left-item">
+					<a href="/home">home</a>
 				</li>
-                <li>
-					<button>
-						<a href="/home">home</button>
-					</a>
+			</ul>
+			<ul class="menu_right">
+				<li class="right-items">
+					<a href="/inscription">inscription</a>
+				</li>/
+				<li class="right-items">
+					<a href="/connexion">connexion</a>
 				</li>
-			{% endif %}
-
-		</ul>
-	</div>
-{% endblock %}
+			</ul>
+		{% else %}
+			<li class="left-item">
+				<a href="/home">home</a>
+			</li>
+			<li>
+				<a href="/Myaccount">Myaccount</a>
+			</li>
+			<li class="right-items">
+				<form action="/disconnect" method="post">
+					<input type="submit" value="Disconnect">
+				</form>
+			</li>
+		{% endif %}
+	</ul>
+</div>{% endblock %}

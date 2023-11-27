@@ -1,24 +1,42 @@
 * {
-
     margin: 0;
     padding: 0;
+}
 
+ul {
+    list-style-type: none;
 }
 
 .header {
-
-    height: 200px;
-    background-color: black;
+    background-color: rgb(180, 85, 85);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 200px;/
 }
 
-.header ul {
-    height: 100%;
+.menu_right {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0px;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    width: 100%;
+    /* Le menu occupe toute la largeur */
     padding: 0;
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+
 }
+
+.menu .right-item:not(:first-child) {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
 
 .voiture ul {
 

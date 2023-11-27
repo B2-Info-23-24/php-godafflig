@@ -1,66 +1,55 @@
 <?php
 
 namespace App\Controller;
-// UserController.php
-require 'vendor/autoload.php';
-require_once 'Database/DatabaseManager.php';
 
-use App\Database\DatabaseManager;
+require 'vendor/autoload.php';
+
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use App\Database\DatabaseManager;
+use UserManager;
+
+
+// Assurez-vous d'inclure UserManager ici
+require_once __DIR__ . '/../Modele/UserManager.php'; // Chemin d'accès à UserManager
+require_once 'Database/DatabaseManager.php';
 
 
 class MyAccountController
 {
+    private $userManager;
     protected $twig;
     private $loader;
     private $databaseManager;
     public function __construct()
     {
-        // $this->userLogged();
-        // Instancier le chargeur de templates
+
+        //----------------------------logique twig -----------------------------------
         $this->loader = new FilesystemLoader(__DIR__ . '/../vue/template');
-        $this->databaseManager = new DatabaseManager();
-        // Instancier l'environnement Twig
         $this->twig = new Environment($this->loader);
-        $this->twig->display('header/header.twig');
-        $this->twig->display('Myaccount/Myaccount.twig');
+        $this->databaseManager = new DatabaseManager();
+        $this->userManager = new UserManager($this->databaseManager->conn);
+        // Obtenez les données de l'utilisateur connecté, si elles existent
+        //----------------------------------------------------------------------------
+        //---------------------------verification si la sessions existe---------------
+        $userSessionData = $this->userManager->getUserSession();
+        //----------------------------------------------------------------------------
+        //----------------affichage des vue en fonction de l'utilisateur --------------
+        $this->twig->display('header/header.twig', ['user' => $userSessionData]);
+        $this->twig->display('Myaccount/Myaccount.twig', ['user' => $userSessionData]);
+        //-----------------------------------------------------------------------------
     }
     // Fonction pour afficher la page
-    public function MyAccount()
-    {
-       
-    }
-
-    // public function userLogged()
+    // public function MyAccount()
     // {
-    //     if (isset(($_COOKIE['sessionUser']))) {
-    //         $sqlRequest = "SELECT * FROM users WHERE session = '" . $_COOKIE['sessionUser'] . "'";
-    //         $result = $this->databaseManager->request($sqlRequest);
-           
-    //         if ($result) {
-    //             "Sucess";
-    //         } else {
-    //             "fail";
-    //         }
-    //     }
     // }
-    // public function isUserLoggedIn() {
-    //     if (isset($_COOKIE['sessionUser'])) {
-    //         $sqlRequest = "SELECT * FROM users WHERE session = ?";
-    //         $params = [$_COOKIE['sessionUser']]; // Paramètres à lier
-    //         $result = request($sqlRequest, $params);
-
-    //         if ($result && count($result) > 0) {
-    //             echo "session active";
-    //             return true; // L'utilisateur est connecté
-    //         } else {
-    //             echo "pas de session user";
-    //             return false; // L'utilisateur n'est pas connecté
-    //         }
-    //     }
-    //     echo "pas de session user";
-    //     return false; // L'utilisateur n'est pas connecté
-    // }
-
+    public function disconnect()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            echo '<meta http-equiv="refresh" content="0">';
+            unset($_SESSION['userSession']);
+            $_SESSION = array();
+            session_destroy();
+        }
+    }
 }

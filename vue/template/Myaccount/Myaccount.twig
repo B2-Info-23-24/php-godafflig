@@ -1,57 +1,67 @@
 {% extends "base.html.twig" %}
 {% block body %}
 	<div class="container">
-		<div class="titre">Bienvenue sur ta page profil, !</div>
+		{% if user %}
+			<div class="titre">Bienvenue sur ta page profil ,
+				{{ user.lastName }}
+				{{ user.firstName }}
+			{% else %}
+				<p>Utilisateur non connecté.</p>
+			{% endif %}
+			!</div>
 		<div class="center">
-			<a href="/logout">
-				<button class="btn-logout" type="submit">Se déconnecter</button>
+			<button class="btn-logout">
+				<a href="/disconnect">deconnexion</button>
 			</a>
+		</a>
+
+	</div>
+
+	<div class="container-stats">
+		<div class="profile-pic">
+			<img src="./" alt="" style="max-height: 250px"/>
+			<div class="pic-box">
+				<div class="pic-title-box">Changer de photo de profil</div>
+				<form action="/profile" method="POST" enctype="multipart/form-data">
+					<input class="test" type="file" name="profile_picture" required/>
+					<input type="submit" value="Ajouter la photo sélectionnée"/>
+				</form>
+			</div>
 		</div>
-		<div class="container-stats">
-			<div class="profile-pic">
-				<img src="./" alt="" style="max-height: 250px"/>
-				<div class="pic-box">
-					<div class="pic-title-box">Changer de photo de profil</div>
-					<form action="/profile" method="POST" enctype="multipart/form-data">
-						<input class="test" type="file" name="profile_picture" required/>
-						<input type="submit" value="Ajouter la photo sélectionnée"/>
-					</form>
+	</div>
+
+	<div class="container-stats">
+		<div class="grey-box">
+			<div class="grey-title">Changer de nom d'utilisateur</div>
+			<form class="formulaire" action="/update-username" method="POST">
+				<input class="input" type="text" name="oldusername" placeholder="Ancien nom d'utilisateur..." required/>
+				<input class="input" type="text" name="newusername" placeholder="Nouveau nom d'utilisateur..." required/>
+				<input class="input" type="text" name="newusernameconfirm" placeholder="Confirmer nouveau nom..." required/>
+				<div>
+					<button class="btn" type="submit">Confirmer</button>
 				</div>
-			</div>
+			</form>
 		</div>
 
-		<div class="container-stats">
-			<div class="grey-box">
-				<div class="grey-title">Changer de nom d'utilisateur</div>
-				<form class="formulaire" action="/update-username" method="POST">
-					<input class="input" type="text" name="oldusername" placeholder="Ancien nom d'utilisateur..." required/>
-					<input class="input" type="text" name="newusername" placeholder="Nouveau nom d'utilisateur..." required/>
-					<input class="input" type="text" name="newusernameconfirm" placeholder="Confirmer nouveau nom..." required/>
-					<div>
-						<button class="btn" type="submit">Confirmer</button>
-					</div>
-				</form>
-			</div>
+		<div class="grey-box">
+			<div class="grey-title">Changer de mot de passe</div>
+			<form class="formulaire" action="/update-password" method="POST">
+				<input class="input" type="password" name="oldpassword" placeholder="Ancien mot de passe..." required/>
+				<input class="input" type="password" name="newpassword" placeholder="Nouveau mot de passe..." required/>
+				<input class="input" type="password" name="newpwdconfirm" placeholder="Confirmer nouveau mot de passe..." required/>
 
-			<div class="grey-box">
-				<div class="grey-title">Changer de mot de passe</div>
-				<form class="formulaire" action="/update-password" method="POST">
-					<input class="input" type="password" name="oldpassword" placeholder="Ancien mot de passe..." required/>
-					<input class="input" type="password" name="newpassword" placeholder="Nouveau mot de passe..." required/>
-					<input class="input" type="password" name="newpwdconfirm" placeholder="Confirmer nouveau mot de passe..." required/>
-
-					<div class="">
-						<button class="btn" type="submit">Confirmer</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
-
-		<div class="center">
-			<form action="/delete-account" onsubmit="if(!confirm('Es-tu sûr.e de vouloir nous quitter ?')){return false;}">
-				<button type="submit" class="btn">Supprimer mon compte</button>
+				<div class="">
+					<button class="btn" type="submit">Confirmer</button>
+				</div>
 			</form>
 		</div>
 	</div>
-{% endblock %}
+
+
+	<div class="center">
+		<form action="/delete-account" onsubmit="if(!confirm('Es-tu sûr.e de vouloir nous quitter ?')){return false;}">
+			<button type="submit" class="btn">Supprimer mon compte</button>
+		</form>
+	</div>
+
+</div>{% endblock %}

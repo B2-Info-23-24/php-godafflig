@@ -7,7 +7,7 @@ include __DIR__ . "/Modele/InitDB.php";
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
 
 $initDb = new InitDb();
-$initDb->createTable();
+// $initDb->initializeDatabaseWithData();
 $initDb->closeConnection();
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -36,7 +36,8 @@ $routes = [
     '/connexion' => ['controller' => 'App\\Controller\\ConnexionController'],
     '/login' => ['controller' => 'App\\Controller\\ConnexionController', 'method' => 'login'],
     '/register' => ['controller' => 'App\\Controller\\InscriptionController', 'method' => 'register'],
-    '/Myaccount' => ['controller' => 'App\\Controller\\MyAccountController']
+    '/Myaccount' => ['controller' => 'App\\Controller\\MyAccountController'],
+    '/disconnect' => ['controller' => 'App\\Controller\\MyAccountController', 'method' => 'disconnect']
 ];
 
 
@@ -56,7 +57,7 @@ if (array_key_exists($request, $routes)) {
         } else {
 
             // echo "PAS DE METHODE TROUVER";
-            http_response_code(404);
+            http_response_code(404);  
         }
     }
 } else {

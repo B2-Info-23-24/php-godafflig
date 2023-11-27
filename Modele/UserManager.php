@@ -1,8 +1,9 @@
 <?php
-
+// session_start();
 require 'vendor/autoload.php';
 class UserManager
 {
+
     public $conn;
 
     public function __construct($databaseConnection)
@@ -13,57 +14,66 @@ class UserManager
         if (!$this->conn instanceof \mysqli) {
             die("Erreur de connexion à la base de données.");
         }
-       
     }
 
-    public function insererUtilisateur($username, $email, $phone_number, $last_name, $first_name, $password)
+    public function insererUtilisateur($last_name, $first_name, $email, $password, $phone_number)
     {
-        $query = $this->conn->prepare("INSERT INTO users (username, email, phone_number, lastname, firstname, password) VALUES (?, ?, ?, ?, ?, ?)");
+        $query = $this->conn->prepare("INSERT INTO users ( lastName, firstName,email, passwordUser , phoneNumber ) VALUES ( ?, ?, ?, ?, ?)");
 
         if ($query === false) {
-            die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
+            die("Erreur lors de la préparation de la requête post: " . htmlspecialchars($this->conn->error));
         }
 
-        $query->bind_param("ssssss", $username, $email, $phone_number, $last_name, $first_name, $password);
+        $query->bind_param("sssss", $last_name, $first_name, $email, $password, $phone_number);
         $query->execute();
         $query->close();
+
 
         // Optionnel: Vous pouvez choisir de ne pas fermer la connexion ici, 
         // surtout si vous prévoyez d'effectuer plusieurs opérations avec la même connexion.
     }
-    public function isUserLoggedIn($email, $password)
+    public function userIsInDb($email, $password)
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = ? AND password = ?");
-            if ($stmt === false) {
-                die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
-            }
-
-            $stmt->bind_param("ss", $email, $password);
-            $stmt->execute();
-
-            // Récupération du résultat
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                // Utilisateur trouvé
-                
-                // // setcookie("password", $password, time() + 3600);
-                //  isset($_COOKIE['userSession']); // cookie existe ?
-
-                // // $_COOKIE['userSession']; //get la valeur d'un cookie
-                 //setcookie("username", "test", time() + 3600);
-                echo "Utilisateur connecté avec succès";
-            } else {
-                // Utilisateur non trouvé
-                echo "Nom d'utilisateur ou mot de passe incorrect";
-            }
-
-            $stmt->close();
+        
+        $stmt = $this->conn->prepare("SELECT id, email, firstName, lastName FROM users WHERE email = ? ");
+        if ($stmt === false) {
+            die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
         }
+
+        $stmt->bind_param("s", $email); // Assurez-vous de hacher le mot de passe avant la comparaison si nécessaire
+        $stmt->execute();
+
+        // Récupération du résultat
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            // Utilisateur trouvé
+            $userData = mysqli_fetch_assoc($result);
+
+            // Stocker les données de l'utilisateur dans la session
+            $_SESSION['userSession'] = [
+                'id' => $userData['id'],
+                'email' => $userData['email'],
+                'firstName' => $userData['firstName'],
+                'lastName' => $userData['lastName']
+            ];
+
+            echo "Utilisateur connecté avec succès";
+          
+        } else {
+            // Utilisateur non trouvé
+            echo "Nom d'utilisateur ou mot de passe incorrect";
+        }
+        $stmt->close();
     }
+    public function getUserSession()
+    {
+        if (isset($_SESSION['userSession'])) {
+            // Assurez-vous de valider et de nettoyer les données de session selon vos besoins
+            return $_SESSION['userSession'];
+        }
+        return null;
+    }
+
 
     public function closeConnection()
     {

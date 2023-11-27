@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Exception;
+
 require 'vendor/autoload.php';
 
 class InitDb
@@ -21,9 +23,14 @@ class InitDb
         }
     }
 
+
+
+
+
+
+    // --------------creation de la BDD--------------------------------------
     public function createTable()
     {
-        // Array of SQL statements
         $sqlStatements = [
             "CREATE TABLE IF NOT EXISTS `brand` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -50,42 +57,289 @@ class InitDb
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
-            "CREATE TABLE IF NOT EXISTS `vehicules` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `nbOfseat_id` int(11) DEFAULT NULL,
-                `review_id` int(11) DEFAULT NULL,
-                PRIMARY KEY (`id`),
-                FOREIGN KEY (`nbOfseat_id`) REFERENCES `nbOfseat`(`id`) ON DELETE SET NULL,
-                FOREIGN KEY (`review_id`) REFERENCES `review`(`id`) ON DELETE SET NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+            "CREATE TABLE IF NOT EXISTS vehicules (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    'nbOfseat_id' int(11) DEFAULT NULL UNIQUE,
+    'review_id' int(11) DEFAULT NULL UNIQUE,
+    'color_id' int(11) DEFAULT NULL UNIQUE,
+    'priceDay' int(11) DEFAULT NULL ,
+    'image' varchar(255) DEFAULT NULL,
+    'brand_id' int(11) DEFAULT NULL UNIQUE, -- Ajout de la colonne brand_id
+    PRIMARY KEY (id),
+    FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id),
+    FOREIGN KEY (review_id) REFERENCES review(id),
+    FOREIGN KEY (color_id) REFERENCES color(id),
+    FOREIGN KEY (brand_id) REFERENCES brand(id) -- Définition de la clé étrangère pour brand_id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
-            "CREATE TABLE IF NOT EXISTS `vehicle_color` (
+
+            "CREATE TABLE IF NOT EXISTS `vehicule_color` (
                 `vehicle_id` int(11) NOT NULL,
                 `color_id` int(11) NOT NULL,
                 PRIMARY KEY (`vehicle_id`, `color_id`),
-                FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle`(`id`) ON DELETE CASCADE,
-                FOREIGN KEY (`color_id`) REFERENCES `color`(`id`) ON DELETE CASCADE
+                FOREIGN KEY (`vehicle_id`) REFERENCES vehicules(`id`),
+                FOREIGN KEY (`color_id`) REFERENCES color(`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
-            "CREATE TABLE IF NOT EXISTS `vehicle_brand` (
+            "CREATE TABLE IF NOT EXISTS `vehicule_brand` (
                 `vehicle_id` int(11) NOT NULL,
                 `brand_id` int(11) NOT NULL,
                 PRIMARY KEY (`vehicle_id`, `brand_id`),
-                FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle`(`id`) ON DELETE CASCADE,
-                FOREIGN KEY (`brand_id`) REFERENCES `brand`(`id`) ON DELETE CASCADE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
-        ];
+                FOREIGN KEY (`vehicle_id`) REFERENCES vehicules(`id`),
+                FOREIGN KEY (`brand_id`) REFERENCES brand(`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
+
+
+            "CREATE TABLE IF NOT EXISTS `users` (
+              `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `lastName` varchar(255) DEFAULT NULL,
+              `firstName` varchar(255) DEFAULT NULL,
+              `email` varchar(255) DEFAULT NULL,
+              `passwordUser` varchar(255) DEFAULT NULL,
+              `phoneNumber` int(11) DEFAULT NULL,
+              `isAdmin` tinyint(1) DEFAULT '0',
+              PRIMARY KEY (`id`),
+              CONSTRAINT unique_email_phoneNumber UNIQUE (`email`, `phoneNumber`)
+            ) ENGINE = InnoDB AUTO_INCREMENT = 14 DEFAULT CHARSET = latin1"
+        ];
         // Execute each SQL statement
         foreach ($sqlStatements as $sql) {
-            if (!$this->conn->query($sql)) {
-                die("Error creating table: " . $this->conn->error);
+            try {
+                $this->conn->query($sql);
+            } catch (Exception $e) {
+                echo $e->getMessage();
             }
         }
-    }
+        // $this->addFakeUser();
+        // try {
+        //     $this->addFakeVehicules();
 
+        // } catch (Exception $e) {
+        //     echo 'le vehicule fake na pas etait construit' . $e->getMessage();
+        // }
+    }
     public function closeConnection()
     {
         $this->conn->close();
     }
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+    //----------------------ajoute un fake user ---------------------------------------------------------------------------------------------------------
+    public function addFakeUser()
+    {
+        $faker = \Faker\Factory::create();
+
+        $lastName = $this->conn->real_escape_string($faker->lastName);
+        $firstName = $this->conn->real_escape_string($faker->firstName);
+        $email = $this->conn->real_escape_string($faker->email);
+        // Générer un mot de passe factice - à remplacer par un mot de passe hashé pour une utilisation réelle
+        $password = $this->conn->real_escape_string($faker->password);
+        $phoneNumber = $faker->randomNumber(9);
+        $isAdmin = 0; // 0 pour false, 1 pour true
+
+        $sql = "INSERT INTO users (lastName, firstName, email, passwordUser, phoneNumber, isAdmin) VALUES ('$lastName', '$firstName', '$email', '$password', $phoneNumber, $isAdmin)";
+
+        try {
+            $this->conn->query($sql);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+    //-----------------------------ajoute un fake vehicules--------------------------------------------------------
+    public function addFakeVehicules()
+    {
+        $faker = (new \Faker\Factory())::create();
+
+        // Récupérer les IDs des entrées des tables
+        $color_ids = $this->getIds('color');
+        $brand_ids = $this->getIds('brand');
+        $seat_ids = $this->getIds('nbOfseat');
+        $review_ids = $this->getIds('review');
+
+        try {
+            // Préparez une seule fois la requête
+            $sql = "INSERT INTO vehicules (nbOfseat_id, review_id, color_id, priceDay, image, brand_id) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->conn->prepare($sql);
+
+            if ($stmt === false) {
+                throw new Exception("Unable to prepare statement: " . $this->conn->error);
+            }
+
+            // Créer des entrées fictives dans la table vehicules
+            for ($i = 0; $i < 5; $i++) { // Vous pouvez ajuster le nombre d'entrées ici
+                $nbOfseat_id = $faker->randomElement($seat_ids);
+                $review_id = $faker->randomElement($review_ids);
+                $color_id = $faker->randomElement($color_ids);
+                $brand_id = $faker->randomElement($brand_ids);
+                $priceDay = $faker->numberBetween(50, 500);
+                $imagePath = $this->getRandomImageFromFolder('/Public/img'); // Assurez-vous que cette méthode retourne le chemin correct
+                // Lier les paramètres pour chaque itération
+                $stmt->bind_param("iiissi", $nbOfseat_id, $review_id, $color_id, $priceDay, $imagePath, $brand_id);
+                $stmt->execute();
+            }
+        } catch (\mysqli_sql_exception $e) {
+            echo "MySQLi Error Code: " . $e->getCode() . "\n";
+            echo "MySQLi Error Message: " . $e->getMessage() . "\n";
+        } catch (Exception $e) {
+            echo "General Error: " . $e->getMessage() . "\n";
+        }
+    }
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+    //-------------------------------------------------------------------------------------------------------------
+    public function getRandomImageFromFolder($folderPath)
+    {
+        // Le chemin relatif correct pour remonter au dossier parent de 'src'
+        $fullFolderPath = __DIR__ . '/../' . $folderPath;
+        if (!file_exists($fullFolderPath)) {
+            throw new Exception("Le répertoire $fullFolderPath n'existe pas.");
+        }
+        $files = scandir($fullFolderPath);
+        $images = array_filter($files, function ($file) use ($fullFolderPath) {
+            return is_file($fullFolderPath . '/' . $file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['png']);
+        });
+
+        if (count($images) > 0) {
+            $randomImage = $images[array_rand($images)];
+            return $folderPath . '/' . $randomImage;
+        } else {
+            return 'path/to/default/image.png'; // Assurez-vous d'avoir une image par défaut ou de gérer cette situation autrement.
+        }
+    }
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+    //-----------------------------------function get id of any table --------------------------------------------
+    private function getIds($tableName)
+    {
+        $sql = "SELECT id FROM $tableName";
+        $result = $this->conn->query($sql);
+        $ids = [];
+        while ($row = $result->fetch_assoc()) {
+            $ids[] = $row['id'];
+        }
+        return $ids;
+    }
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+    //-------------------function getcolorId for select colors with id in table colors-----------------------------
+    // private function getColorIds()
+    // {
+    //     $sql = "SELECT id FROM color";
+    //     $result = $this->conn->query($sql);
+    //     $color_ids = [];
+    //     while ($row = $result->fetch_assoc()) {
+    //         $color_ids[] = $row['id'];
+    //     }
+    //     return $color_ids;
+    // }
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+    //-----------------------------------function add colors in table --------------------------------------------
+    public function addColors()
+    {
+        $colors = ['Rouge', 'Blanc', 'Gris', 'Noir', 'Noir Mat', 'Bleu Turquoise', 'Bleu Marine'];
+        foreach ($colors as $color) {
+            $sql = "INSERT INTO color (text) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception($this->conn->error);
+            }
+            $stmt->bind_param("s", $color);
+            $stmt->execute();
+        }
+    }
+    //-----------------------------------------------------------------------------------------------------------
+
+
+
+    //---------------------------add fake review and fake nb of start-----------------------------------------
+    public function addFakeReviews()
+    {
+        $faker = \Faker\Factory::create();
+        for ($i = 0; $i < 10; $i++) {
+            $content = $faker->text;
+            $sql = "INSERT INTO review (content) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("s", $content);
+            $stmt->execute();
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------
+
+
+
+    //---------------------------add randomNbOfSeat-----------------------------------------------------------------
+    public function addNbOfSeats()
+    {
+        $seatNumbers = [2, 3, 4, 5, 7, 9];
+        foreach ($seatNumbers as $number) {
+            $sql = "INSERT INTO nbOfseat (nb_of_seat_int) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $number);
+            $stmt->execute();
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------
+
+
+    //---------------------------add randomBrand-----------------------------------------------------------------
+
+    public function addBrands()
+    {
+        $brands = ['Nissan', 'Renault', 'Volvo', 'Tesla', 'Fiat', 'Peugeot', 'Volkswagen', 'Ferrari', 'Hyundai', 'Kia'];
+        foreach ($brands as $brand) {
+            $sql = "INSERT INTO brand (text) VALUES (?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("s", $brand);
+            $stmt->execute();
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------
+
+
+
+    //----------------------------------function initializeDatabaseWithData-------------------------------------------------------------
+    public function initializeDatabaseWithData()
+    {
+        $this->createTable(); // Créez les tables
+        $this->addColors(); // Ajoutez des couleurs
+        $this->addBrands(); // Ajoutez des marques
+        $this->addNbOfSeats(); // Ajoutez des nombres de sièges
+        $this->addFakeReviews(); // Ajoutez des critiques fictives
+        $this->addFakeVehicules(); // Ajoutez des véhicules fictifs
+        $this->addFakeUser();
+    }
+    //---------------------------------------------------------------------------------------------------------
+
 }

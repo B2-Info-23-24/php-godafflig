@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 // UserController.php
+
 require 'vendor/autoload.php';
 require_once 'Database/DatabaseManager.php';
 
@@ -21,33 +22,36 @@ class connexionController
 
     public function __construct()
     {
-        // Instancier le chargeur de templates
+        //----------------------------logique twig -----------------------------------
         $this->loader = new FilesystemLoader(__DIR__ . '/../vue/template');
-
-        // Instancier l'environnement Twig
         $this->twig = new Environment($this->loader);
         $this->databaseManager = new DatabaseManager();
         $this->userManager = new UserManager($this->databaseManager->conn);
-        $this->twig->display('header/header.twig');
-        echo $this->twig->render('connexion/connexion.twig');
+        // Obtenez les données de l'utilisateur connecté, si elles existent
+        //----------------------------------------------------------------------------
+        //---------------------------verification si la sessions existe---------------
+        $userSessionData = $this->userManager->getUserSession();
+        //----------------------------------------------------------------------------
+        //----------------affichage des vue en fonction de l'utilisateur --------------
+        $this->twig->display('header/header.twig', ['user' => $userSessionData]);
+        $this->twig->display('connexion/connexion.twig', ['user' => $userSessionData]);
+        //-----------------------------------------------------------------------------
 
-        
     }
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            echo '<meta http-equiv="refresh" content="0">';
             $email = isset($_POST['email']) ? $_POST['email'] : null;
-            $password = isset($_POST['password']) ? $_POST['password'] : null;
-
-           
+            $password = isset($_POST['passwordUser']) ? $_POST['passwordUser'] : null;
             if ($email && $password) {
-                $this->userManager->isUserLoggedIn($email, $password);
+                $this->userManager->userIsInDb($email, $password);
             } else {
-               
                 echo "Email ou mot de passe manquant.";
             }
         }
     }
+
 
     // Charger et afficher le template avec les données
 

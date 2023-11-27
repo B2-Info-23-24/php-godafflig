@@ -1,6 +1,7 @@
 {
     "require": {
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "fzaninotto/faker": "^1.9"
     },
     "autoload": {
         "psr-4": {
