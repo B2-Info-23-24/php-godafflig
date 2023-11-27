@@ -5,10 +5,7 @@ namespace App\Controller;
 require 'vendor/autoload.php';
 
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 use App\Database\DatabaseManager;
-use UserManager;
-use VehiculeManager;
 use ReservationManager;
 require_once __DIR__ . '/../Modele/UserManager.php'; // Chemin d'accès à UserManager
 require_once __DIR__ . '/../Modele/VehiculeManager.php';

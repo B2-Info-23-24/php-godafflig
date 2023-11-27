@@ -15,10 +15,11 @@ class VehiculeManager
     {
         $vehicules = [];
 
-        $sql = "SELECT v.*, c.text AS colorName, n.nb_of_seat_int AS numberOfSeats 
+        $sql = "SELECT v.*, c.text AS colorName, n.nb_of_seat_int AS numberOfSeats, b.text AS brandName
         FROM vehicules v 
         JOIN color c ON v.color_id = c.id 
         JOIN nbOfseat n ON v.nbOfseat_id = n.id 
+        JOIN brand b ON v.brand_id = b.id 
         LIMIT ?";
 
         if ($stmt = $this->conn->prepare($sql)) {
