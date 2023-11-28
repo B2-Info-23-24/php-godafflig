@@ -69,7 +69,7 @@
 						<p>BRAND:
 						{{ vehicule.brandName }}</p>
 					<img src="{{ vehicule.image }}" alt="vehicule Image" class="vehicule-image">
-					<button onclick="location.href='/rental/{{ vehicule.id }}'">Rent Vehicle</button>
+					<button onclick="location.href='/rental?vehicule_id={{vehicule.id}}'">Rent Vehicle</button>
 				</div>
 			{% endfor %}
 		</div>

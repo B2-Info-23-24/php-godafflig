@@ -35,7 +35,7 @@ class UserManager
         if ($stmt === false) {
             die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
         }
-
+        
         $stmt->bind_param("s", $email);
         $stmt->execute();
 

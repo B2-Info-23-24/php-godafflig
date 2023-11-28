@@ -4,13 +4,15 @@ class ReservationManager
 {
     private $conn;
 
-    public function __construct($conn)
+    public function __construct($databaseConnection)
     {
-        $this->conn = $conn;
+        $this->conn = $databaseConnection;
+
+
+        if (!$this->conn instanceof \mysqli) {
+            die("Erreur de connexion à la base de données.");
+        }
     }
-
-
-
     public function createReservation($userId, $vehicleId, $startDate, $endDate)
     {
         if ($this->isVehicleAvailable($vehicleId, $startDate, $endDate)) {

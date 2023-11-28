@@ -8,57 +8,53 @@ include __DIR__ . "/Modele/InitDB.php";
 
 $initDb = new InitDb();
 //$initDb->initializeDatabaseWithData();
-$initDb->createTable();
+// $initDb->createTable();
 
 $initDb->closeConnection();
 
 require_once __DIR__ . '/vendor/autoload.php';
-
-
-
 // Assurez-vous que ce chemin est correct   
-
-
 require_once __DIR__ . '/Controller/HomeController.php';
 require_once __DIR__ . '/Controller/InscriptionController.php';
 require_once __DIR__ . '/Controller/MyAccountController.php';
 require_once __DIR__ . '/Controller/ConnexionController.php';
+require_once __DIR__ . '/Controller/VehiculeRentalController.php';
 
 
 
 
-// Initialisation de la base de données
 
 
 
 $routes = [
-    '/' => ['controller' => 'App\\Controller\\HomeController'],
-    '/home' => ['controller' => 'App\\Controller\\HomeController'],
-    '/inscription' => ['controller' => 'App\\Controller\\InscriptionController'],
-    '/connexion' => ['controller' => 'App\\Controller\\ConnexionController'],
-    '/login' => ['controller' => 'App\\Controller\\ConnexionController', 'method' => 'login'],
-    '/register' => ['controller' => 'App\\Controller\\InscriptionController', 'method' => 'register'],
-    '/Myaccount' => ['controller' => 'App\\Controller\\MyAccountController'],
-    '/disconnect' => ['controller' => 'App\\Controller\\MyAccountController', 'method' => 'disconnect']
+    '' => ['controller' => 'App\\Controller\\HomeController'],
+    'home' => ['controller' => 'App\\Controller\\HomeController'],
+    'inscription' => ['controller' => 'App\\Controller\\InscriptionController'],
+    'connexion' => ['controller' => 'App\\Controller\\ConnexionController'],
+    'login' => ['controller' => 'App\\Controller\\ConnexionController', 'method' => 'login'],
+    'register' => ['controller' => 'App\\Controller\\InscriptionController', 'method' => 'register'],
+    'Myaccount' => ['controller' => 'App\\Controller\\MyAccountController'],
+    'disconnect' => ['controller' => 'App\\Controller\\MyAccountController', 'method' => 'disconnect'],
+    'rental' => ['controller' => 'App\\Controller\\VehiculeRentalController', 'method' => 'viewVehicule'],
+    // 'rental' => ['controller' => 'App\\Controller\\VehiculeRentalController']
 ];
 
 
 $request = $_SERVER['REQUEST_URI'];
+$request2 = $_GET['action'];
 
-if (array_key_exists($request, $routes)) {
-    $controllerName = $routes[$request]['controller'];
+if (array_key_exists($request2, $routes)) {
+    
+    $controllerName = $routes[$request2]['controller'];
     $controller = new $controllerName();
 
-    // Vérifiez d'abord si la clé 'method' existe et si c'est une chaîne
-    if (isset($routes[$request]['method']) && is_string($routes[$request]['method'])) {
-        $methodName = $routes[$request]['method'];
+    if (isset($routes[$request2]['method']) && is_string($routes[$request2]['method'])) {
+        $methodName = $routes[$request2]['method'];
         $controller->$methodName();
     } else {
         if (method_exists($controller, 'index')) {
             $controller->index();
         } else {
-
-            // echo "PAS DE METHODE TROUVER";
             http_response_code(404);  
         }
     }
