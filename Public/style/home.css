@@ -96,16 +96,24 @@ ul {
 }
 
 .vehicle-container {
+    margin-top: 30px;
+ 
     flex-grow: 1;
     max-width: 800px; /* Adjust this value based on your desired maximum width */
     padding-left: 220px; /* Adjust so the content does not overlap the sidebar */
+    
 }
 
 .vehicle-item {
+    
     border: 1px solid #ddd;
     padding: 20px;
     margin-bottom: 20px;
     text-align: center; /* Center text and content within each vehicle item */
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
 }
 
 .vehicle-image {

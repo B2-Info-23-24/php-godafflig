@@ -73,18 +73,15 @@ class VehiculeRentalController
     public function viewVehicule()
     {
         
-        echo 'test1';
         // Vérification si l'ID du véhicule est présent dans l'URL
         if (isset($_GET['vehicule_id'])) {
             $vehiculeId = intval($_GET['vehicule_id']); // Conversion en entier pour plus de sécurité
             // Récupération des informations du véhicule
             $vehiculeManagerid = $this->vehiculeManager->vehiculesId($vehiculeId);
-            // var_dump($vehiculeManagerid); 
             if ($vehiculeManagerid) {
                 // Affichage des informations du véhicule
                 // Par exemple, avec un système de template
                 $this->twig->display('booking/booking.html.twig', ['vehicul' => $vehiculeManagerid]);
-                echo "test2";
             } else {
                 // Gestion du cas où le véhicule n'est pas trouvé
                 echo "Véhicule non trouvé";

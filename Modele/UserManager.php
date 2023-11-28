@@ -31,11 +31,11 @@ class UserManager
     public function userIsInDb($email, $password)
     {
 
-        $stmt = $this->conn->prepare("SELECT id, email, firstName, lastName FROM users WHERE email = ? ");
+        $stmt = $this->conn->prepare("SELECT id, email, firstName, lastName, passwordUser, isAdmin FROM users WHERE email = ?");
         if ($stmt === false) {
             die("Erreur lors de la préparation de la requête: " . htmlspecialchars($this->conn->error));
         }
-        
+
         $stmt->bind_param("s", $email);
         $stmt->execute();
 
@@ -50,10 +50,13 @@ class UserManager
                 'id' => $userData['id'],
                 'email' => $userData['email'],
                 'firstName' => $userData['firstName'],
-                'lastName' => $userData['lastName']
+                'lastName' => $userData['lastName'],
+                'isAdmin' => $userData['isAdmin']
             ];
-
-            echo "Utilisateur connecté avec succès";
+            if ($userData['isAdmin'] == 1) {
+                // L'utilisateur est un admin
+                echo "Utilisateur administrateur connecté avec succès";
+            }
         } else {
             echo "Nom d'utilisateur ou mot de passe incorrect";
         }
@@ -71,5 +74,19 @@ class UserManager
     public function closeConnection()
     {
         $this->conn->close();
+    }
+    public function isAdmin($email)
+    {
+        $sql = "SELECT isAdmin FROM users WHERE email = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            return $user['isAdmin'];
+        } else {
+            return false;
+        }
     }
 }

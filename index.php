@@ -7,7 +7,7 @@ include __DIR__ . "/Modele/InitDB.php";
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
 
 $initDb = new InitDb();
-//$initDb->initializeDatabaseWithData();
+// $initDb->initializeDatabaseWithData();
 // $initDb->createTable();
 
 $initDb->closeConnection();
@@ -19,6 +19,7 @@ require_once __DIR__ . '/Controller/InscriptionController.php';
 require_once __DIR__ . '/Controller/MyAccountController.php';
 require_once __DIR__ . '/Controller/ConnexionController.php';
 require_once __DIR__ . '/Controller/VehiculeRentalController.php';
+require_once __DIR__ . '/Controller/AdminController.php';
 
 
 
@@ -36,7 +37,8 @@ $routes = [
     'Myaccount' => ['controller' => 'App\\Controller\\MyAccountController'],
     'disconnect' => ['controller' => 'App\\Controller\\MyAccountController', 'method' => 'disconnect'],
     'rental' => ['controller' => 'App\\Controller\\VehiculeRentalController', 'method' => 'viewVehicule'],
-    // 'rental' => ['controller' => 'App\\Controller\\VehiculeRentalController']
+    'admin' => ['controller' => 'App\\Controller\\AdminController'],
+    'deleteBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'delete']
 ];
 
 

@@ -1,0 +1,87 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+	<h2>CRUD SUR LA BDD</h2>
+
+	<form action="/addBrand" method="post">
+		<label for="brandName">Nom de la marque:</label>
+		<input type="text" id="brandName" name="brandName" required>
+		<input type="submit" value="Ajouter">
+	</form>
+
+	<table>
+		<tr>
+			<th>
+				BRAND
+			</th>
+			<th>
+				update
+			</th>
+			<th>
+				delete
+			</th>
+		</tr>
+
+		{% for brand in brandForm %}
+			<tr>
+				<td>{{ brand.text }}</td>
+				<td>
+					<button>update</button>
+				</td>
+				<td>
+					<a href="/deleteBrand?brand={{ brand.text }}">delete</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	{# <form action="/addBrand" method="post">
+					<label for="seatCount">Nombre de places:</label>
+					<input type="number" id="seatCount" name="seatCount" min="1" required>
+					<input type="submit" value="Ajouter">
+				</form> #}
+
+
+{# <form action="/addBrand" method="post">
+	<label for="colorName">Nom de la couleur:</label>
+	<input type="text" id="colorName" name="colorName" required>
+	<input type="submit" value="Ajouter">
+</form>  #}
+
+
+	{# <form action="/addBrand" method="post">
+					<label for="userName">Nom d'utilisateur:</label>
+					<input type="text" id="userName" name="userName" required>
+				
+					<label for="userEmail">Email:</label>
+					<input type="email" id="userEmail" name="userEmail" required>
+				
+					<label for="userPassword">Mot de passe:</label>
+					<input type="password" id="userPassword" name="userPassword" required>
+				
+					<input type="submit" value="Créer utilisateur"> #}
+	{#
+				</form> #}
+
+	{#
+				<form action="/addBrand" method="post">
+					<label for="vehicleName">Nom du véhicule:</label>
+					<input type="text" id="vehicleName" name="vehicleName" required>
+				
+					<label for="vehicleBrand">Marque du véhicule:</label>
+					<input type="text" id="vehicleBrand" name="vehicleBrand" required>
+				
+					<!-- Ajoutez d'autres champs selon les caractéristiques des véhicules -->
+				
+					<input type="submit" value="Ajouter véhicule">
+				</form> #}
+
+	{#
+				<form action="/addBrand" method="post">
+					<label for="reviewContent">Votre avis:</label>
+					<textarea id="reviewContent" name="reviewContent" required></textarea>
+					<input type="submit" value="Poster l'avis">
+				</form> #}
+
+
+{% endblock %}
