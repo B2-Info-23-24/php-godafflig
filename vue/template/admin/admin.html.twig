@@ -1,10 +1,11 @@
 {% extends "base.html.twig" %}
 {% block body %}
 
-	<h2>CRUD SUR LA BDD</h2>
+	<h2>MARQUE</h2>
 
-	<form action="/addBrand" method="post">
-		<label for="brandName">Nom de la marque:</label>
+	<form action="/addBrand?brand={{ brand.text }}" method="POST">
+		<label for="brandName">Ajouter une marque :
+		</label>
 		<input type="text" id="brandName" name="brandName" required>
 		<input type="submit" value="Ajouter">
 	</form>
@@ -20,68 +21,107 @@
 			<th>
 				delete
 			</th>
+
 		</tr>
 
 		{% for brand in brandForm %}
 			<tr>
 				<td>{{ brand.text }}</td>
 				<td>
-					<button>update</button>
+					<button>
+						<form action="/updateBrand?brand={{ brand.text }}" method="POST">
+							<label for="brandName">Modifier le nom de la marque:
+								{{ brand.text }}</label>
+							<input type="text" id="brandName" name="brandName" required>
+							<input type="submit" value="modifier">
+						</form>
+					</button>
 				</td>
 				<td>
-					<a href="/deleteBrand?brand={{ brand.text }}">delete</a>
+					<button>
+						<a href="/deleteBrand?brand={{ brand.text }}">delete</a>
+					</button>
 				</td>
 			</tr>
 		{% endfor %}
 	</table>
-
+	<h2>nombre de place</h2>
+	{% for nbofseat in nbofseatForm %}
+	
+			<tr>
+				<td>{{ nbofseat.nb_of_seat_int }}</td>
+				<td>
+					{# <button>
+						<form action="/nbofseatdelete?nbofseat={{ nbofseat.nb_of_seat_int }}" method="POST">
+							<label for="nbofseat">
+								{{ nbofseat.nb_of_seat_int }}</label>
+							<input type="text" id="brandName" name="brandName" required>
+							<input type="submit" value="modifier">
+						</form>
+					</button> #}
+				</td>
+				<td>
+					<button>
+						<a href="/deletenbofseat?nbofseat={{ nbofseat.nb_of_seat_int }}">delete</a>
+					</button>
+				</td>
+			</tr>
+		{% endfor %}
+		
+		{# <form action="/addBrand?nbofseat={{ nbofseat.nb_of_seat_int }}" method="POST">
+			<label for="brandName">Ajouter un nombre de place :
+			</label>
+			<input type="text" id="brandName" name="brandName" required>
+			<input type="submit" value="Ajouter">
+		</form>
+	{% endfor %} #}
 	{# <form action="/addBrand" method="post">
-					<label for="seatCount">Nombre de places:</label>
-					<input type="number" id="seatCount" name="seatCount" min="1" required>
-					<input type="submit" value="Ajouter">
-				</form> #}
+										<label for="seatCount">Nombre de places:</label>
+										<input type="number" id="seatCount" name="seatCount" min="1" required>
+										<input type="submit" value="Ajouter">
+									</form> #}
 
 
 {# <form action="/addBrand" method="post">
-	<label for="colorName">Nom de la couleur:</label>
-	<input type="text" id="colorName" name="colorName" required>
-	<input type="submit" value="Ajouter">
-</form>  #}
+		<label for="colorName">Nom de la couleur:</label>
+		<input type="text" id="colorName" name="colorName" required>
+		<input type="submit" value="Ajouter">
+	</form>  #}
 
 
 	{# <form action="/addBrand" method="post">
-					<label for="userName">Nom d'utilisateur:</label>
-					<input type="text" id="userName" name="userName" required>
-				
-					<label for="userEmail">Email:</label>
-					<input type="email" id="userEmail" name="userEmail" required>
-				
-					<label for="userPassword">Mot de passe:</label>
-					<input type="password" id="userPassword" name="userPassword" required>
-				
-					<input type="submit" value="Créer utilisateur"> #}
+										<label for="userName">Nom d'utilisateur:</label>
+										<input type="text" id="userName" name="userName" required>
+									
+										<label for="userEmail">Email:</label>
+										<input type="email" id="userEmail" name="userEmail" required>
+									
+										<label for="userPassword">Mot de passe:</label>
+										<input type="password" id="userPassword" name="userPassword" required>
+									
+										<input type="submit" value="Créer utilisateur"> #}
 	{#
-				</form> #}
+									</form> #}
 
 	{#
-				<form action="/addBrand" method="post">
-					<label for="vehicleName">Nom du véhicule:</label>
-					<input type="text" id="vehicleName" name="vehicleName" required>
-				
-					<label for="vehicleBrand">Marque du véhicule:</label>
-					<input type="text" id="vehicleBrand" name="vehicleBrand" required>
-				
-					<!-- Ajoutez d'autres champs selon les caractéristiques des véhicules -->
-				
-					<input type="submit" value="Ajouter véhicule">
-				</form> #}
+									<form action="/addBrand" method="post">
+										<label for="vehicleName">Nom du véhicule:</label>
+										<input type="text" id="vehicleName" name="vehicleName" required>
+									
+										<label for="vehicleBrand">Marque du véhicule:</label>
+										<input type="text" id="vehicleBrand" name="vehicleBrand" required>
+									
+										<!-- Ajoutez d'autres champs selon les caractéristiques des véhicules -->
+									
+										<input type="submit" value="Ajouter véhicule">
+									</form> #}
 
 	{#
-				<form action="/addBrand" method="post">
-					<label for="reviewContent">Votre avis:</label>
-					<textarea id="reviewContent" name="reviewContent" required></textarea>
-					<input type="submit" value="Poster l'avis">
-				</form> #}
+									<form action="/addBrand" method="post">
+										<label for="reviewContent">Votre avis:</label>
+										<textarea id="reviewContent" name="reviewContent" required></textarea>
+										<input type="submit" value="Poster l'avis">
+									</form> #}
 
 
 {% endblock %}

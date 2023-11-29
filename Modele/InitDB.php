@@ -40,13 +40,13 @@ class InitDb
 
             "CREATE TABLE IF NOT EXISTS `color` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `text` varchar(255) DEFAULT NULL,
+                `text` varchar(255) DEFAULT NULL UNIQUE,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
             "CREATE TABLE IF NOT EXISTS `nbOfseat` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `nb_of_seat_int` int(11) DEFAULT NULL,
+                `nb_of_seat_int` int(11) DEFAULT NULL UNIQUE,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
