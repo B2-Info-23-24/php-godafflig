@@ -46,82 +46,160 @@
 		{% endfor %}
 	</table>
 	<h2>nombre de place</h2>
-	{% for nbofseat in nbofseatForm %}
-	
+	<form action="/addnbofseat?nbOfseat={{ nbOfseat.nb_of_seat_int }}" method="POST">
+		<label for="nbOfseat">Ajouter un nombre de place :
+		</label>
+		<input type="text" id="brandName" name="nbOfseatname" required>
+		<input type="submit" value="Ajouter">
+	</form>
+	<table>
+		<tr>
+			<th>
+				nombre de place :
+			</th>
+			<th>
+				update
+			</th>
+			<th>
+				delete
+			</th>
+
+		</tr>
+
+		{% for nbOfseat in nbofseatForm %}
+
 			<tr>
-				<td>{{ nbofseat.nb_of_seat_int }}</td>
+				<td>{{ nbOfseat.nb_of_seat_int }}</td>
 				<td>
-					{# <button>
-						<form action="/nbofseatdelete?nbofseat={{ nbofseat.nb_of_seat_int }}" method="POST">
-							<label for="nbofseat">
-								{{ nbofseat.nb_of_seat_int }}</label>
-							<input type="text" id="brandName" name="brandName" required>
+					<button>
+						<form action="/updatenbOfseat?nbOfseat={{ nbOfseat.nb_of_seat_int }}" method="POST">
+							<label for="nbOfseat">Modifier le nom de la marque:
+								{{nbOfseat.nb_of_seat_int }}</label>
+							<input type="text" id="nbOfseat" name="nbOfseat" required>
 							<input type="submit" value="modifier">
 						</form>
-					</button> #}
+					</button>
 				</td>
 				<td>
 					<button>
-						<a href="/deletenbofseat?nbofseat={{ nbofseat.nb_of_seat_int }}">delete</a>
+						<a href="/deletenbofseat?nbOfseat={{ nbOfseat.nb_of_seat_int }}">delete</a>
 					</button>
 				</td>
 			</tr>
 		{% endfor %}
-		
-		{# <form action="/addBrand?nbofseat={{ nbofseat.nb_of_seat_int }}" method="POST">
-			<label for="brandName">Ajouter un nombre de place :
-			</label>
-			<input type="text" id="brandName" name="brandName" required>
-			<input type="submit" value="Ajouter">
-		</form>
-	{% endfor %} #}
-	{# <form action="/addBrand" method="post">
-										<label for="seatCount">Nombre de places:</label>
-										<input type="number" id="seatCount" name="seatCount" min="1" required>
-										<input type="submit" value="Ajouter">
-									</form> #}
+	</table>
 
 
-{# <form action="/addBrand" method="post">
-		<label for="colorName">Nom de la couleur:</label>
-		<input type="text" id="colorName" name="colorName" required>
+	<h2>couleurs</h2>
+
+	<form action="/createcolor?color={{ color.text }}" method="POST">
+		<label for="brandName">Ajouter une marque :
+		</label>
+		<input type="text" id="color" name="color" required>
 		<input type="submit" value="Ajouter">
-	</form>  #}
+	</form>
+	<table>
+		<tr>
+			<th>
+				color
+			</th>
+			<th>
+				update
+			</th>
+			<th>
+				delete
+			</th>
+
+		</tr>
 
 
-	{# <form action="/addBrand" method="post">
-										<label for="userName">Nom d'utilisateur:</label>
-										<input type="text" id="userName" name="userName" required>
-									
-										<label for="userEmail">Email:</label>
-										<input type="email" id="userEmail" name="userEmail" required>
-									
-										<label for="userPassword">Mot de passe:</label>
-										<input type="password" id="userPassword" name="userPassword" required>
-									
-										<input type="submit" value="Créer utilisateur"> #}
-	{#
-									</form> #}
+		{% for color in colorsForm %}
+			<tr>
+				<td>{{ color.text }}</td>
+				<td>
+					<button>
+						<form action="/updatecolor?color={{ color.text }}" method="POST">
+							<label for="colorName">Modifier le nom de la marque:
+								{{ color.text }}</label>
+							<input type="text" id="color" name="color" required>
+							<input type="submit" value="modifier">
+						</form>
+					</button>
+				</td>
+				<td>
+					<button>
+						<a href="/deletecolor?color={{ color.text }}">delete</a>
+					</button>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
 
-	{#
-									<form action="/addBrand" method="post">
-										<label for="vehicleName">Nom du véhicule:</label>
-										<input type="text" id="vehicleName" name="vehicleName" required>
-									
-										<label for="vehicleBrand">Marque du véhicule:</label>
-										<input type="text" id="vehicleBrand" name="vehicleBrand" required>
-									
-										<!-- Ajoutez d'autres champs selon les caractéristiques des véhicules -->
-									
-										<input type="submit" value="Ajouter véhicule">
-									</form> #}
 
-	{#
-									<form action="/addBrand" method="post">
-										<label for="reviewContent">Votre avis:</label>
-										<textarea id="reviewContent" name="reviewContent" required></textarea>
-										<input type="submit" value="Poster l'avis">
-									</form> #}
+	<h2>Users</h2>
+
+	<h2>Ajouter un Utilisateur</h2>
+
+	<form action="/adminadduser" method="post">
+		<label for="phoneNumber">Numéro de téléphone:</label><br>
+		<input type="tel" id="phoneNumber" name="phoneNumber"><br>
+		<label for="lastName">Nom de famille:</label><br>
+		<input type="text" id="lastName" name="lastName" required><br>
+		<label for="firstName">Prénom:</label><br>
+		<input type="text" id="firstName" name="firstName" required><br>
+		<label for="email">Email:</label><br>
+		<input type="email" id="email" name="email" required><br>
+		<label for="password">Mot de passe:</label><br>
+		<input type="password" id="passwordUser" name="passwordUser" required><br>
+		<input type="submit" value="Ajouter l'utilisateur">
+	</form>
+
+	<table>
+		<tr>
+			<th>Nom</th>
+			<th>Prénom</th>
+			<th>Admin</th>
+			<th>Email</th>
+			<th>Téléphone</th>
+			<th>Password</th>
+			<th>Actions</th>
+		</tr>
+		{% for user in userForm %}
+			<tr>
+				<td>{{ user.id }}</td>
+				<td>{{ user.lastName }}</td>
+				<td>{{ user.firstName }}</td>
+				<td>{{ user.isAdmin ? 'Yes' : 'No' }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.phoneNumber }}</td>
+				<td>{{ user.passwordUser }}</td>
+				<td>
+					<!-- Bouton pour ouvrir le formulaire de modification -->
+					<button onclick="document.getElementById('editForm-{{ user.id }}').style.display='block'">Modifier</button>
+
+					<!-- Formulaire de modification -->
+					<div id="editForm-{{ user.id }}" style="display:none;">
+						<form action="/updateUser?id={{ user.id }}" method="POST">
+							<input type="text" name="lastName" value="{{ user.lastName }}" placeholder="nom" required>
+							<input type="text" name="firstName" value="{{ user.firstName }}" placeholder="prenom" required>
+							<input type="email" name="email" value="{{ user.email }}" placeholder="email" required>
+							<input type="text" name="phoneNumber" value="{{ user.phoneNumber }}" placeholder="telephone" required>
+							<input type="password" name="passwordUser" placeholder="mot de passe" required>
+							<p>rendre cette utilisateur admin</p>
+							<input type="checkbox" name="isAdmin" value="1" {% if user.isAdmin %} checked {% endif %}>
+							<input type="submit" value="Sauvegarder">
+						</form>
+					</div>
+
+					<!-- Bouton pour supprimer l'utilisateur -->
+
+					<button>
+						<a href="/deleteUser?id={{ user.id }}">delete</a>
+					</button>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
 
 
 {% endblock %}

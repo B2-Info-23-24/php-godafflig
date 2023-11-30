@@ -66,10 +66,10 @@ class InitDb
             `image` varchar(255) DEFAULT NULL,
             `brand_id` int DEFAULT NULL UNIQUE,
             PRIMARY KEY (id),
-            FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id),
-            FOREIGN KEY (review_id) REFERENCES review(id),
-            FOREIGN KEY (color_id) REFERENCES color(id),
-         FOREIGN KEY (brand_id) REFERENCES brand(id) ON DELETE SET NULL 
+            FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id) ON DELETE SET NULL,
+            FOREIGN KEY (review_id) REFERENCES review(id)ON DELETE SET NULL,
+            FOREIGN KEY (color_id) REFERENCES color(id) ON DELETE SET NULL,
+         FOREIGN KEY (brand_id) REFERENCES brand(id) ON DELETE SET NULL
 )        ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
 
@@ -125,13 +125,7 @@ class InitDb
                 echo "Erreur lors de l'exécution de la requête SQL : " . $e->getMessage();
             }
         }
-        // $this->addFakeUser();
-        // try {
-        //     $this->addFakeVehicules();
-
-        // } catch (Exception $e) {
-        //     echo 'le vehicule fake na pas etait construit' . $e->getMessage();
-        // }
+      
     }
     public function closeConnection()
     {
@@ -261,20 +255,6 @@ class InitDb
 
 
 
-
-
-    //-------------------function getcolorId for select colors with id in table colors-----------------------------
-    // private function getColorIds()
-    // {
-    //     $sql = "SELECT id FROM color";
-    //     $result = $this->conn->query($sql);
-    //     $color_ids = [];
-    //     while ($row = $result->fetch_assoc()) {
-    //         $color_ids[] = $row['id'];
-    //     }
-    //     return $color_ids;
-    // }
-    //-------------------------------------------------------------------------------------------------------------
 
 
 
