@@ -30,6 +30,8 @@ $routes = [
     'deleteBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletebrand'],
     'deletenbofseat' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletenbofseat'],
     'deletecolor' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletecolor'],
+     
+    'adminAddVehicle' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'adminAddVehicle'],
     'deleteUser' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletuser'],
     'updateBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'updatebrand'],
     'updatenbOfseat' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'updatenbofseat'],

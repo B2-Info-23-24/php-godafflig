@@ -189,5 +189,52 @@ class Manager
             throw $e;
         }
     }
+    public function getSeats() {
+        $seats = [];
+        $sql = "SELECT id, nb_of_seat_int FROM nbOfseat"; // Adaptez avec le nom réel de votre colonne et table
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $seats[] = $row;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Failed to prepare query: " . $this->conn->error);
+        }
+        return $seats;
+    }
+
+    public function getColors() {
+        $colors = [];
+        $sql = "SELECT id, text FROM color"; // Adaptez avec le nom réel de votre colonne et table
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $colors[] = $row;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Failed to prepare query: " . $this->conn->error);
+        }
+        return $colors;
+    }
+
+    public function getBrands() {
+        $brands = [];
+        $sql = "SELECT id, text FROM brand"; // Adaptez avec le nom réel de votre colonne et table
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $brands[] = $row;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Failed to prepare query: " . $this->conn->error);
+        }
+        return $brands;
+    }
 
 }

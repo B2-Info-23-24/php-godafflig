@@ -41,34 +41,44 @@ class AdminController
         $colorsFormHtml = $this->Manager->displaycolorForm();
         $NbOfSeatFormHtml = $this->Manager->displaynbofsaetForm();
         $usersFormHtml = $this->Manager->displayusersForm();
+        $carsFormhtml = $this->Manager->displaycarForm();
+        $seats = $this->Manager->getSeats(); // Récupère les sièges disponibles de la BDD
+        $colors = $this->Manager->getColors(); // Récupère les couleurs disponibles de la BDD
+        $brands = $this->Manager->getBrands(); // Récupère les marques disponibles de la BDD
+
         //----------------------------------------------------------------------------
 
         //----------------affichage des vue en fonction de l'utilisateur --------------
         $this->twig->display('header/header.twig', ['user' => $userSessionData]);
-        $this->twig->display('admin/admin.html.twig', ['user' => $userSessionData, 'brandForm' => $brandFormHtml, 'nbofseatForm' => $NbOfSeatFormHtml,'colorsForm' => $colorsFormHtml, 'userForm'=> $usersFormHtml ]);
+        $this->twig->display('admin/admin.html.twig', [
+            'user' => $userSessionData, 'brandForm' => $brandFormHtml, 'nbofseatForm' => $NbOfSeatFormHtml, 'colorsForm' => $colorsFormHtml, 'userForm' => $usersFormHtml,
+            'carsForm' => $carsFormhtml, 'seats' => $seats,
+            'colors' => $colors,
+            'brands' => $brands
+        ]);
         //-----------------------------------------------------------------------------
         //----------------check user isadmin or not  ------------------------------------
         $userSessionData = $this->userManager->getUserSession();
         if (!$userSessionData || $userSessionData['isAdmin'] != 1) {
-            echo '<script>window.location.href = "/login";</script>'; // Rediriger vers la page de connexion ou d'accueil
+            echo '<script>window.location.href = "/home";</script>'; // Rediriger vers la page de connexion ou d'accueil
             exit(); // Important pour arrêter l'exécution du script
         }
         //-----------------------------------------------------------------------------
-    
+
     }
 
     public function deletebrand()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo '<script>window.location.href = "/admin";</script>';
-            $this->Manager->deleteRecord('brand', 'text',$_GET['brand']);
+            $this->Manager->deleteRecord('brand', 'text', $_GET['brand']);
         }
     }
 
     public function createbrand()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->Manager->createRecord('brand', 'text',$_POST['brandName']);
+            $this->Manager->createRecord('brand', 'text', $_POST['brandName']);
             echo ($_POST['brandName']);
             echo '<script>window.location.href = "/admin";</script>';
         }
@@ -77,15 +87,15 @@ class AdminController
     public function updatebrand()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->Manager->updateRecord('brand', 'text',$_POST['brandName'], 'text',$_GET['brand'] );
-            
+            $this->Manager->updateRecord('brand', 'text', $_POST['brandName'], 'text', $_GET['brand']);
+
             echo '<script>window.location.href = "/admin";</script>';
         }
     }
     public function deletenbofseat()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $this->Manager->deleteRecord('nbOfseat', 'nb_of_seat_int',$_GET['nbOfseat']);
+            $this->Manager->deleteRecord('nbOfseat', 'nb_of_seat_int', $_GET['nbOfseat']);
 
             // $this->BrandManager->deletenbofseat($_GET['brand']);
             echo '<script>window.location.href = "/admin";</script>';
@@ -112,17 +122,16 @@ class AdminController
     public function updatenbofseat()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->Manager->updateRecord('nbOfseat', 'nb_of_seat_int',$_POST['nbOfseat'], 'nb_of_seat_int',$_GET['nbOfseat'] );
-            
+            $this->Manager->updateRecord('nbOfseat', 'nb_of_seat_int', $_POST['nbOfseat'], 'nb_of_seat_int', $_GET['nbOfseat']);
+
             echo '<script>window.location.href = "/admin";</script>';
         }
     }
     public function deletecolor()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $this->Manager->deleteRecord('color', 'text',$_GET['color']);
+            $this->Manager->deleteRecord('color', 'text', $_GET['color']);
             echo '<script>window.location.href = "/admin";</script>';
-
         }
     }
     public function createcolor()
@@ -146,17 +155,16 @@ class AdminController
     public function updatecolor()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->Manager->updateRecord('color', 'text',$_POST['color'], 'text',$_GET['color'] );
-            
+            $this->Manager->updateRecord('color', 'text', $_POST['color'], 'text', $_GET['color']);
+
             echo '<script>window.location.href = "/admin";</script>';
         }
     }
     public function deletuser()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $this->Manager->deleteRecord('users', 'id',$_GET['id']);
+            $this->Manager->deleteRecord('users', 'id', $_GET['id']);
             echo '<script>window.location.href = "/admin";</script>';
-
         }
     }
     public function createuser()
@@ -173,27 +181,34 @@ class AdminController
         echo '<script>window.location.href = "/admin";</script>';
     }
     public function updateuser()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $userId = $_GET['id']; // Assurez-vous de valider et nettoyer cette valeur
-        $userData = [
-            'lastName' => $_POST['lastName'],
-            'firstName' => $_POST['firstName'],
-            'email' => $_POST['email'],
-            'phoneNumber' => $_POST['phoneNumber'],
-            'passwordUser' => $_POST['passwordUser'], 
-            'isAdmin' => isset($_POST['isAdmin']) ? 1 : 0
-        ];
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $userId = $_GET['id']; // Assurez-vous de valider et nettoyer cette valeur
+            $userData = [
+                'lastName' => $_POST['lastName'],
+                'firstName' => $_POST['firstName'],
+                'email' => $_POST['email'],
+                'phoneNumber' => $_POST['phoneNumber'],
+                'passwordUser' => $_POST['passwordUser'],
+                'isAdmin' => isset($_POST['isAdmin']) ? 1 : 0
+            ];
 
-        // Mise à jour des informations de l'utilisateur
-        $updated = $this->Manager->updateUser($userId, $userData);
+            // Mise à jour des informations de l'utilisateur
+            $updated = $this->Manager->updateUser($userId, $userData);
 
-        // Redirection ou traitement en fonction du résultat de la mise à jour
-        if ($updated) {
-            echo '<script>window.location.href = "/admin";</script>';
-        } else {
-            echo "Aucune mise à jour n'a été effectuée.";
+            // Redirection ou traitement en fonction du résultat de la mise à jour
+            if ($updated) {
+                echo '<script>window.location.href = "/admin";</script>';
+            } else {
+                echo "Aucune mise à jour n'a été effectuée.";
+            }
         }
     }
-}
+    // public function deletecars()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    //         $this->Manager->deleteRecord('vehicule', 'id', $_GET['id']);
+    //         echo '<script>window.location.href = "/admin";</script>';
+    //     }
+    // }
 }
