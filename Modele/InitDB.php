@@ -4,7 +4,10 @@ namespace App\Model;
 
 use Exception;
 
-require 'vendor/autoload.php';
+// require 'vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
 
 class InitDb
 {
@@ -34,7 +37,7 @@ class InitDb
 
             "CREATE TABLE IF NOT EXISTS `brand` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `text` varchar(255) DEFAULT NULL UNIQUE,
+                `text` varchar(255) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
@@ -50,24 +53,18 @@ class InitDb
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
-            "CREATE TABLE IF NOT EXISTS `review` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `content` text DEFAULT NULL,
-                `nb_of_star` int(11) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
             "CREATE TABLE IF NOT EXISTS vehicules (
             `id` int NOT NULL AUTO_INCREMENT,
             `nbOfseat_id` int DEFAULT NULL,
-            `review_id` int DEFAULT NULL,
+            `review` varchar(255) DEFAULT NULL,
+            `nb_of_star` int(11) DEFAULT NULL,
             `color_id` int DEFAULT NULL ,
             `priceDay` int DEFAULT NULL ,
             `image` varchar(255) DEFAULT NULL,
             `brand_id` int DEFAULT NULL,
             PRIMARY KEY (id),
             FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id) ON DELETE SET NULL,
-            FOREIGN KEY (review_id) REFERENCES review(id)ON DELETE SET NULL,
             FOREIGN KEY (color_id) REFERENCES color(id) ON DELETE SET NULL,
          FOREIGN KEY (brand_id) REFERENCES brand(id) ON DELETE SET NULL
 )        ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
@@ -110,22 +107,20 @@ class InitDb
             `vehicle_id` int(11) NOT NULL, -- L'ID du véhicule associé à la réservation
             `start_date` DATE NOT NULL, -- Date de début de la réservation
             `end_date` DATE NOT NULL, -- Date de fin de la réservation
-            -- Ajoutez d'autres colonnes si nécessaire
+            `reservation_price` int(11) NOT NULL, -- Prix de la reservation
             PRIMARY KEY (`id`),
             FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
             FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
         ];
-        // Execute each SQL statement
         foreach ($sqlStatements as $sql) {
             try {
-                
+
                 $this->conn->query($sql);
             } catch (Exception $e) {
                 echo "Erreur lors de l'exécution de la requête SQL : " . $e->getMessage();
             }
         }
-      
     }
     public function closeConnection()
     {
@@ -166,33 +161,28 @@ class InitDb
     //-----------------------------ajoute un fake vehicules--------------------------------------------------------
     public function addFakeVehicules()
     {
-        $faker = (new \Faker\Factory())::create();
+        $faker = (new \Faker\Factory())::create('fr_FR');
 
-        // Récupérer les IDs des entrées des tables
         $color_ids = $this->getIds('color');
         $brand_ids = $this->getIds('brand');
         $seat_ids = $this->getIds('nbOfseat');
-        $review_ids = $this->getIds('review');
 
         try {
-            // Préparez une seule fois la requête
-            $sql = "INSERT INTO vehicules (nbOfseat_id, review_id, color_id, priceDay, image, brand_id) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO vehicules (nbOfseat_id, review, color_id, priceDay, image, brand_id ,nb_of_star) VALUES (?, ?, ?, ?, ?, ?,?)";
             $stmt = $this->conn->prepare($sql);
 
             if ($stmt === false) {
                 throw new Exception("Unable to prepare statement: " . $this->conn->error);
             }
-
-            // Créer des entrées fictives dans la table vehicules
-            for ($i = 0; $i < 5; $i++) { // Vous pouvez ajuster le nombre d'entrées ici
+            for ($i = 0; $i < 5; $i++) { 
                 $nbOfseat_id = $faker->randomElement($seat_ids);
-                $review_id = $faker->randomElement($review_ids);
+                $review = $faker->sentence();
                 $color_id = $faker->randomElement($color_ids);
                 $brand_id = $faker->randomElement($brand_ids);
                 $priceDay = $faker->numberBetween(50, 500);
                 $imagePath = $this->getRandomImageFromFolder('/Public/img'); // Assurez-vous que cette méthode retourne le chemin correct
-                // Lier les paramètres pour chaque itération
-                $stmt->bind_param("iiissi", $nbOfseat_id, $review_id, $color_id, $priceDay, $imagePath, $brand_id);
+                $nbofstar = $faker->numberBetween(0, 5);
+                $stmt->bind_param("isiisii", $nbOfseat_id, $review, $color_id, $priceDay, $imagePath, $brand_id, $nbofstar);
                 $stmt->execute();
             }
         } catch (\mysqli_sql_exception $e) {
@@ -225,8 +215,7 @@ class InitDb
             $randomImage = $images[array_rand($images)];
             return $folderPath . '/' . $randomImage;
         } else {
-            return 'path/to/default/image.png'; // Assurez-vous d'avoir une image par défaut ou de gérer cette situation autrement.
-        }
+            return 'path/to/default/image.png'; }
     }
     //-------------------------------------------------------------------------------------------------------------
 
@@ -260,36 +249,23 @@ class InitDb
 
 
     //-----------------------------------function add colors in table --------------------------------------------
-    public function addColors() {
+    public function addColors()
+    {
         $colors = ['Rouge', 'Blanc', 'Gris', 'Noir', 'Noir Mat', 'Bleu Turquoise', 'Bleu Marine'];
         foreach ($colors as $color) {
             $sql = "INSERT IGNORE INTO color (text) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
-            // if ($stmt === false) {
-            //     throw new Exception($this->conn->error);
-            // }
+            if ($stmt === false) {
+                throw new Exception($this->conn->error);
+            }
             $stmt->bind_param("s", $color);
             $stmt->execute();
         }
-    }    
+    }
     //-----------------------------------------------------------------------------------------------------------
 
 
 
-    //---------------------------add fake review and fake nb of start-----------------------------------------
-    public function addFakeReviews()
-    {
-        $faker = \Faker\Factory::create();
-        $faker->addProvider(new \Faker\Provider\fr_FR\Text($faker));
-        for ($i = 0; $i < 10; $i++) {
-            $content = $faker->text();
-            $sql = "INSERT INTO review (content) VALUES (?)";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("s", $content);
-            $stmt->execute();
-        }
-    }
-    //---------------------------------------------------------------------------------------------------------
 
 
 
@@ -314,16 +290,16 @@ class InitDb
 
     public function addBrands()
     {
+        echo 'addbrand ' . "\n";
         $brands = ['Nissan', 'Renault', 'Volvo', 'Tesla', 'Fiat', 'Peugeot', 'Volkswagen', 'Ferrari', 'Hyundai', 'Kia'];
         foreach ($brands as $brand) {
             $sql = "INSERT IGNORE INTO brand (text) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("s", $brand);
             $stmt->execute();
-        
         }
     }
-    
+
     //---------------------------------------------------------------------------------------------------------
 
 
@@ -335,10 +311,13 @@ class InitDb
         $this->addColors(); // Ajoutez des couleurs
         $this->addBrands(); // Ajoutez des marques
         $this->addNbOfSeats(); // Ajoutez des nombres de sièges
-        $this->addFakeReviews(); // Ajoutez des critiques fictives
         $this->addFakeVehicules(); // Ajoutez des véhicules fictifs
-        $this->addFakeUser();
+        $this->addFakeUser(); 
+    
     }
     //---------------------------------------------------------------------------------------------------------
-
 }
+$initDb = new InitDb();
+$initDb->initializeDatabaseWithData();
+$initDb->createTable();
+$initDb->closeConnection();

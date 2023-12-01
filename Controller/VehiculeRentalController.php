@@ -56,23 +56,61 @@ class VehiculeRentalController
         $this->twig->display('header/header.twig', ['user' => $userSessionData]);
         // $this->twig->display('booking/booking.html.twig',['vehicule' => $vehicules]);
         //-----------------------------------------------------------------------------
-
+        $this->getUserSession();
+        // print_r($_SESSION['userSession']);
+    }
+    public function getUserSession()
+    {
+        if (isset($_SESSION['userSession'])) {
+            return $_SESSION['userSession'];
+        }
+        return null;
     }
 
-    public function rentVehicle($userId, $vehicleId, $startDate, $endDate)
+
+    public function rentVehicule()
     {
 
-        $reservationCreated = $this->reservationsManager->createReservation($userId, $vehicleId, $startDate, $endDate);
+        // session_start(); // Assurez-vous que la session est démarrée
+        $session = $this->getUserSession(); // Cette méthode doit initialiser $_SESSION['userSession']
 
-        if ($reservationCreated) {
-            // La réservation a été créée avec succès
+        if ($session) {
+            $userId = $_SESSION['userSession']['id']; // Récupération de l'ID utilisateur depuis la session
+
+
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $vehicleId = $_POST['vehiculeid']; // Validation et nettoyage recommandés
+                $startDate = $_POST['startdate']; // Validation et nettoyage recommandés
+                $endDate = $_POST['enddate']; // Validation et nettoyage recommandés
+
+                // Calculer le nombre de jours
+                $diff = date_diff(date_create($startDate), date_create($endDate));
+                $nbDays = $diff->format("%a");
+                echo "<br>" ."le nombre de jour reserve est egale a : " . $nbDays . "journée";
+                // Récupérer le priceDay du véhicule
+                $priceDay = $this->vehiculeManager->getVehiclePricePerDay($vehicleId); // Implémentez cette méthode selon votre logique de base de données
+                echo "<br>" ." le prix pas journée est de  : " . $priceDay . "€";
+                // Calculer le prix total
+                $totalprice = $priceDay * ($nbDays + 1); // +1 car la journée de départ compte
+                echo "<br>" ."le prix total est de : " . $totalprice  . "€";
+                
+
+                // Création de la réservation
+                $reservationCreated = $this->reservationsManager->createReservation($userId, $vehicleId, $startDate, $endDate, $totalprice);
+                if ($reservationCreated) {
+                } else {
+                    echo " la reservation n'a pas pu être faite le vehicules est indiosponible sur c'est date ";
+                }
+            }
         } else {
-            // Informez l'utilisateur de l'échec
+            // L'utilisateur n'est pas connecté ou l'ID utilisateur n'est pas dans la session
+            // Redirigez vers la page de connexion ou gérez cette situation
         }
     }
+
     public function viewVehicule()
     {
-        
+
         // Vérification si l'ID du véhicule est présent dans l'URL
         if (isset($_GET['vehicule_id'])) {
             $vehiculeId = intval($_GET['vehicule_id']); // Conversion en entier pour plus de sécurité
@@ -91,7 +129,6 @@ class VehiculeRentalController
             echo "ID de véhicule non spécifié ou invalide";
         }
     }
-
 }
 
 // Création du contrôleur quelque part dans votre application

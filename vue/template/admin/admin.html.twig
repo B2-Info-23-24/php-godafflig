@@ -226,23 +226,22 @@
 				<option placeholder="marque" value="{{ brand.id }}">{{ brand.text }}</option>
 			{% endfor %}
 		</select><br>
-		<label for="brand">review:</label><br>
-		<select id="brand" name="brandName" required>
-			{% for review in reviews %}
-				<option placeholder="marque" value="{{ review.id }}">{{ review.content }}</option>
-			{% endfor %}
-		</select><br>
-		{# 
-						<label for="priceDay">Prix par jour:</label><br>
-						<input type="number" id="priceDay" name="priceDay" required step="10"><br> #}
-		{# 
-						<label for="review">review</label><br>
-						<input type="text" id="review" name="review_id"><br> #}
-		"
-		{# <label for="image">URL de l'image:</label><br>
-									<input type="text" id="image" name="image" required><br> #}
 
-	<input type="submit" value="Ajouter le véhicule"> </form>
+		<label for="priceDay">Prix par jour:</label><br>
+		<input type="number" id="priceDay" name="priceDay" required step="10"><br>
+
+		<label for="priceDay">note 0/5</label><br>
+		<input type="number" name="nbofstar" required step="1" min="0" max="5"><br>
+
+		<label for="brand">review:</label><br>
+		<input
+		type="text" name="review">
+
+		{# <label for="image">URL de l'image:</label><br>
+																	<input type="text" id="image" name="image" required><br> #}
+
+		<input type="submit" value="Ajouter le véhicule">
+	</form>
 
 
 	<table>
@@ -254,7 +253,6 @@
 			<tr>
 				<td>{{ vehicle.id }}</td>
 				<td>{{ vehicle.brand }}</td>
-
 				<td>
 					<!-- Bouton pour ouvrir le formulaire de modification -->
 					<button onclick="document.getElementById('editForm-{{ vehicle.id }}').style.display='block'">Modifier</button>
@@ -262,11 +260,8 @@
 					<!-- Formulaire de modification -->
 					<div id="editForm-{{ vehicle.id }}" style="display:none;">
 						<form action="/updateVehicle?id={{ vehicle.id }}" method="POST">
-							<input type="text" name="brand" value="{{ vehicle.brand }}" required>
-							<input type="text" name="model" value="{{ vehicle.model }}" required>
-							<input
-							type="number" name="year" value="{{ vehicle.year }}" required>
-							<!-- Ajoutez d'autres champs si nécessaire -->
+							<input placeholder="marque" type="text" name="brand" value="{{ brand.text }}" required>
+							<input placeholder="nombre de place" type="text" name="nbOfseat_id" value="{{ nbofseat.nb_of_eat_int }}" required>
 							<input type="submit" value="Sauvegarder">
 						</form>
 					</div>

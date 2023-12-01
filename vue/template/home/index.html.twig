@@ -15,7 +15,6 @@
 						</div>
 					{% endfor %}
 				</div>
-
 				<!-- Number of Seats Filter -->
 				<div class="filter-section">
 					<h3>Number of Seats</h3>
@@ -27,7 +26,7 @@
 						</div>
 					{% endfor %}
 				</div>
-				
+
 				<!-- Color Filter -->
 				<div class="filter-section">
 					<h3>Colors</h3>
@@ -41,11 +40,11 @@
 				</div>
 
 				<!-- Price Filter -->
-				<div class="filter-section">
+				{# <div class="filter-section">
 					<h3>Price (Max)</h3>
 					<input type="range" id="price" name="price" min="0" max="500" oninput="this.nextElementSibling.value = this.value">
 					<output>250</output>
-				</div>
+				</div> #}
 
 				<!-- Submit Button for Filters -->
 				<div class="filter-section">
@@ -58,15 +57,13 @@
 				<div class="vehicle-item">
 					<h3>Vehicule ID:
 						{{ vehicule.id }}</h3>
-					<p>Number of Seats:
+					<p>Nombre de place:
 						{{ vehicule.numberOfSeats }}</p>
-					<p>Review ID:
-						{{ vehicule.review_id }}</p>
 					<p>Color:
 						{{ vehicule.colorName }}</p>
-					<p>Price per Day:
-						{{ vehicule.priceDay }}</p>
-						<p>BRAND:
+					<p>Prix par jour:
+						{{ vehicule.priceDay }}€</p>
+					<p>Marque:
 						{{ vehicule.brandName }}</p>
 					<img src="{{ vehicule.image }}" alt="vehicule Image" class="vehicule-image">
 					<button onclick="location.href='/rental?vehicule_id={{vehicule.id}}'">Rent Vehicle</button>

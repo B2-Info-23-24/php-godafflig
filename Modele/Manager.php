@@ -236,21 +236,21 @@ class Manager
         }
         return $brands;
     }
-    public function getReviews() {
-        $brands = [];
-        $sql = "SELECT id, content FROM review"; // Adaptez avec le nom réel de votre colonne et table
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->execute();
-            $result = $stmt->get_result();
-            while ($row = $result->fetch_assoc()) {
-                $brands[] = $row;
-            }
-            $stmt->close();
-        } else {
-            throw new Exception("Failed to prepare query: " . $this->conn->error);
-        }
-        return $brands;
-    }
+    // public function getReviews() {
+    //     $brands = [];
+    //     $sql = "SELECT id, content FROM review"; // Adaptez avec le nom réel de votre colonne et table
+    //     if ($stmt = $this->conn->prepare($sql)) {
+    //         $stmt->execute();
+    //         $result = $stmt->get_result();
+    //         while ($row = $result->fetch_assoc()) {
+    //             $brands[] = $row;
+    //         }
+    //         $stmt->close();
+    //     } else {
+    //         throw new Exception("Failed to prepare query: " . $this->conn->error);
+    //     }
+    //     return $brands;
+    // }
     
     public function insererUtilisateur($last_name, $first_name, $email, $password, $phone_number)
     {
@@ -264,16 +264,16 @@ class Manager
         $query->execute();
         $query->close();
     }
-    public function createvehicule($nbOfseat, $review_id, $color_id, $priceDay, $brand_id)
+    public function createvehicule($nbOfseat, $review, $color_id, $priceDay, $brand_id , $nbofstar)
 {
     try {
-        $query = $this->conn->prepare("INSERT INTO vehicules (nbOfseat_id, review_id, color_id, priceDay, brand_id) VALUES (?, ?, ?, ?, ?)");
+        $query = $this->conn->prepare("INSERT INTO vehicules (nbOfseat_id, review, color_id, priceDay, brand_id, nb_of_star) VALUES (?, ?, ?, ?, ?, ?)");
 
         if ($query === false) {
             throw new \Exception("Erreur lors de la préparation de la requête : " . htmlspecialchars($this->conn->error));
         }
 
-        if (!$query->bind_param("iiiii", $nbOfseat, $review_id, $color_id, $priceDay, $brand_id)) {
+        if (!$query->bind_param("isiiii", $nbOfseat, $review, $color_id, $priceDay, $brand_id, $nbofstar)) {
             throw new \Exception("Erreur lors du bind_param : " . htmlspecialchars($query->error));
         }
 

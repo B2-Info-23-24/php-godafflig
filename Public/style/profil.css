@@ -235,3 +235,7 @@ body {
     color: #272343;
     cursor: pointer;
 }
+.vehicle-image-small {
+    width: 100px; /* ou toute autre taille appropriée */
+    height: auto;
+}

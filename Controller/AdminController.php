@@ -45,7 +45,7 @@ class AdminController
         $seats = $this->Manager->getSeats(); // Récupère les sièges disponibles de la BDD
         $colors = $this->Manager->getColors(); // Récupère les couleurs disponibles de la BDD
         $brands = $this->Manager->getBrands(); // Récupère les marques disponibles de la BDD
-        $reviews = $this->Manager->getReviews(); // Récupère les marques disponibles de la BDD
+        // $reviews = $this->Manager->getReviews(); // Récupère les marques disponibles de la BDD
 
         //----------------------------------------------------------------------------
 
@@ -56,7 +56,6 @@ class AdminController
             'carsForm' => $carsFormhtml, 'seats' => $seats,
             'colors' => $colors,
             'brands' => $brands,
-            'reviews' => $reviews
         ]);
         //-----------------------------------------------------------------------------
         //----------------check user isadmin or not  ------------------------------------
@@ -220,9 +219,10 @@ class AdminController
                 // Récupérer les données du formulaire
                 $color_id = isset($_POST['color_id']) ? $_POST['color_id'] : null;
                 $nbOfseat_id = isset($_POST['nbOfseat_id']) ? $_POST['nbOfseat_id'] : null;
-                $review_id = isset($_POST['review_id']) ? $_POST['review_id'] : null;
+                $review = isset($_POST['review']) ? $_POST['review'] : null;
                 $priceDay = isset($_POST['priceDay']) ? $_POST['priceDay'] : null;
                 $brand_id = isset($_POST['brandName']) ? $_POST['brandName'] : null;
+                $nbofstar = isset($_POST['nbofstar']) ? $_POST['nbofstar'] : null;
                 echo 'colorid : ' . $color_id . '<br>';
                 echo 'nbofseatid : ' . $nbOfseat_id . '<br>';
                 echo 'brandid : '  .  $brand_id . '<br>';
@@ -232,23 +232,18 @@ class AdminController
                 if (!$this->Manager->recordExists('color', $color_id)) {
                     $missingIds[] = "color";
                 }
-                if (!$this->Manager->recordExists('review', $review_id)) {
-                    $missingIds[] = "review";
-                }
                 if (!$this->Manager->recordExists('nbOfseat', $nbOfseat_id)) {
                     $missingIds[] = "nbOfseat";
                 }
                 if (!$this->Manager->recordExists('brand', $brand_id)) {
                     $missingIds[] = "brand";
                 }
-
                 if (!empty($missingIds)) {
                     echo "ID non trouvé pour : " . implode(', ', $missingIds) . ".";
                     return; // Sortir de la fonction si un ou plusieurs ID ne sont pas valides
                 }
-
                 // Insérer le nouveau véhicule
-                $this->Manager->createVehicule($nbOfseat_id, $review_id, $color_id, $priceDay, $brand_id);
+                $this->Manager->createVehicule($nbOfseat_id, $review, $color_id, $priceDay, $brand_id, $nbofstar);
 
                 // Redirection en cas de succès
                 echo '<script>window.location.href = "/admin";</script>';

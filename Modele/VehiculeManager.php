@@ -9,8 +9,6 @@ class VehiculeManager
     public function __construct($databaseConnection)
     {
         $this->conn = $databaseConnection;
-
-
         if (!$this->conn instanceof \mysqli) {
             die("Erreur de connexion à la base de données.");
         }
@@ -56,4 +54,25 @@ class VehiculeManager
             return null; // Return null in case of an error
         }
     }
+    public function getVehiclePricePerDay($id)
+    {
+        $sql = "SELECT priceDay FROM vehicules WHERE id = ?";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = $result->fetch_assoc();
+    
+            if ($data) {
+                return $data['priceDay']; // Return just the priceDay value
+            } else {
+                echo "Aucun véhicule trouvé avec cet ID.";
+                return null; // Return null if no data is found
+            }
+        } else {
+            echo ("Statement failed: " . $this->conn->error . "<br>");
+            return null; // Return null in case of an error
+        }
+    }
+    
 }

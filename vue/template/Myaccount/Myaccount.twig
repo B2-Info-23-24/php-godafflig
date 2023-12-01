@@ -5,30 +5,43 @@
 			<div class="titre">Bienvenue sur ta page profil ,
 				{{ user.lastName }}
 				{{ user.firstName }}
+
+				<div class="reservations-table">
+					<h2>Mes réservations</h2>
+					<table>
+						<thead>
+							<tr>
+								<th>Vehicule ID</th>
+								<th>Nombre de sièges</th>
+								<th>Couleur</th>
+								<th>Prix par jour</th>
+								<th>Marque</th>
+								<th>Image</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for reservation in reservation %}
+								<tr>
+									<td>{{ reservation.vehicle_id }}</td>
+									<td>{{ reservation.numberOfSeats }}</td>
+									<td>{{ reservation.colorName }}</td>
+									<td>{{ reservation.priceDay }}€</td>
+									<td>{{ reservation.brandName }}</td>
+									<td><img src="{{ reservation.image }}" alt="Image du véhicule" class="vehicle-image-small"></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
 			{% else %}
 				<p>Utilisateur non connecté.</p>
 			{% endif %}
 			!</div>
-		<div class="center">
-			<button class="btn-logout">
-				<a href="/disconnect">deconnexion</button>
-			</a>
-		</a>
+
 
 	</div>
 
-	<div class="container-stats">
-		<div class="profile-pic">
-			<img src="./" alt="" style="max-height: 250px"/>
-			<div class="pic-box">
-				<div class="pic-title-box">Changer de photo de profil</div>
-				<form action="/profile" method="POST" enctype="multipart/form-data">
-					<input class="test" type="file" name="profile_picture" required/>
-					<input type="submit" value="Ajouter la photo sélectionnée"/>
-				</form>
-			</div>
-		</div>
-	</div>
 
 	<div class="container-stats">
 		<div class="grey-box">
@@ -63,5 +76,9 @@
 			<button type="submit" class="btn">Supprimer mon compte</button>
 		</form>
 	</div>
-
+	<div class="center">
+		<button class="btn-logout">
+			<a href="/disconnect">deconnexion</button>
+		</a>
+	</a>
 </div>{% endblock %}

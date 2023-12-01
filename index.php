@@ -1,14 +1,10 @@
 <?php
-use App\Model\InitDb;
-include __DIR__ . "/Modele/InitDB.php";
+
 // $loader = new \Twig\Loader\FilesystemLoader('vue/helloworld.twig'); // Chemin vers vos templates
 // echo $twig->render('helloworld.twig', ['message' => 'Hello World']);
 //http://172.21.41.167:8080/
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
-$initDb = new InitDb();
-$initDb->initializeDatabaseWithData();
-$initDb->createTable();
-$initDb->closeConnection();
+
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/Controller/HomeController.php';
 require_once __DIR__ . '/Controller/InscriptionController.php';
@@ -16,6 +12,7 @@ require_once __DIR__ . '/Controller/MyAccountController.php';
 require_once __DIR__ . '/Controller/ConnexionController.php';
 require_once __DIR__ . '/Controller/VehiculeRentalController.php';
 require_once __DIR__ . '/Controller/AdminController.php';
+
 $routes = [
     '' => ['controller' => 'App\\Controller\\HomeController'],
     'home' => ['controller' => 'App\\Controller\\HomeController'],
@@ -39,11 +36,12 @@ $routes = [
     'addnbofseat' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createnbofseat'],
     'createcolor' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createcolor'],
     'addBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createbrand'],
-    'adminadduser' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createuser']
+    'adminadduser' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createuser'],
+    'booking' => ['controller' => 'App\\Controller\\VehiculeRentalController' ,'method' => 'rentVehicule']
     
 ];
 $request = $_SERVER['REQUEST_URI'];
-$request2 = $_GET['action'];
+$request2 = isset($_GET['action']) ? $_GET['action'] : "";
 if (array_key_exists($request2, $routes)) {
     $controllerName = $routes[$request2]['controller'];
     $controller = new $controllerName();
