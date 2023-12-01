@@ -1,7 +1,7 @@
 {
     "require": {
         "twig/twig": "^3.0",
-        "fzaninotto/faker": "^1.9"
+        "fakerphp/faker": "^1.23"
     },
     "autoload": {
         "psr-4": {

@@ -6,8 +6,8 @@ include __DIR__ . "/Modele/InitDB.php";
 //http://172.21.41.167:8080/
 //$loader = new \Twig\Loader\FilesystemLoader('/var/www/html/src/vue'); // Chemin correct vers votre dossier de templates
 $initDb = new InitDb();
-// $initDb->initializeDatabaseWithData();
-// $initDb->createTable();
+$initDb->initializeDatabaseWithData();
+$initDb->createTable();
 $initDb->closeConnection();
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/Controller/HomeController.php';
@@ -30,8 +30,7 @@ $routes = [
     'deleteBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletebrand'],
     'deletenbofseat' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletenbofseat'],
     'deletecolor' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletecolor'],
-     
-    'adminAddVehicle' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'adminAddVehicle'],
+    'adminAddVehicule' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'createVehicle'],
     'deleteUser' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'deletuser'],
     'updateBrand' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'updatebrand'],
     'updatenbOfseat' => ['controller' => 'App\\Controller\\AdminController' ,'method' => 'updatenbofseat'],

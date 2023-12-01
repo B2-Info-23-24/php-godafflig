@@ -204,36 +204,45 @@
 
 	<h2>Vehicule</h2>
 	<h2>Ajouter un Véhicule</h2>
-	<form action="/adminAddVehicle" method="post">
+	<form action="/adminAddVehicule" method="post">
+
 		<label for="nbOfSeat">Nombre de sièges:</label><br>
-		<select id="nbOfSeat" name="nbOfSeat_id" required>
+		<select name="nbOfseat_id">
 			{% for seat in seats %}
 				<option value="{{ seat.id }}">{{ seat.nb_of_seat_int }}</option>
 			{% endfor %}
 		</select><br>
 
 		<label for="color">Couleur:</label><br>
-		<select id="color" name="color_id" required>
+		<select name="color_id">
 			{% for color in colors %}
 				<option value="{{ color.id }}">{{ color.text }}</option>
 			{% endfor %}
-		</select><br>
+		</select>
 
 		<label for="brand">Marque:</label><br>
-		<select id="brand" name="brand_id" required>
+		<select id="brand" name="brandName" required>
 			{% for brand in brands %}
-				<option value="{{ brand.id }}">{{ brand.text }}</option>
+				<option placeholder="marque" value="{{ brand.id }}">{{ brand.text }}</option>
 			{% endfor %}
 		</select><br>
-
-		<label for="priceDay">Prix par jour:</label><br>
-		<input type="number" id="priceDay" name="priceDay" required step="0.01"><br>
-
+		<label for="brand">review:</label><br>
+		<select id="brand" name="brandName" required>
+			{% for review in reviews %}
+				<option placeholder="marque" value="{{ review.id }}">{{ review.content }}</option>
+			{% endfor %}
+		</select><br>
+		{# 
+						<label for="priceDay">Prix par jour:</label><br>
+						<input type="number" id="priceDay" name="priceDay" required step="10"><br> #}
+		{# 
+						<label for="review">review</label><br>
+						<input type="text" id="review" name="review_id"><br> #}
+		"
 		{# <label for="image">URL de l'image:</label><br>
-		<input type="text" id="image" name="image" required><br> #}
+									<input type="text" id="image" name="image" required><br> #}
 
-		<input type="submit" value="Ajouter le véhicule">
-	</form>
+	<input type="submit" value="Ajouter le véhicule"> </form>
 
 
 	<table>
@@ -245,7 +254,7 @@
 			<tr>
 				<td>{{ vehicle.id }}</td>
 				<td>{{ vehicle.brand }}</td>
-				
+
 				<td>
 					<!-- Bouton pour ouvrir le formulaire de modification -->
 					<button onclick="document.getElementById('editForm-{{ vehicle.id }}').style.display='block'">Modifier</button>
@@ -270,6 +279,4 @@
 			</tr>
 		{% endfor %}
 	</table>
-
-
 {% endblock %}

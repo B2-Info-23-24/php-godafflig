@@ -59,12 +59,12 @@ class InitDb
 
             "CREATE TABLE IF NOT EXISTS vehicules (
             `id` int NOT NULL AUTO_INCREMENT,
-            `nbOfseat_id` int DEFAULT NULL UNIQUE,
-            `review_id` int DEFAULT NULL UNIQUE,
-            `color_id` int DEFAULT NULL UNIQUE,
+            `nbOfseat_id` int DEFAULT NULL,
+            `review_id` int DEFAULT NULL,
+            `color_id` int DEFAULT NULL ,
             `priceDay` int DEFAULT NULL ,
             `image` varchar(255) DEFAULT NULL,
-            `brand_id` int DEFAULT NULL UNIQUE,
+            `brand_id` int DEFAULT NULL,
             PRIMARY KEY (id),
             FOREIGN KEY (nbOfseat_id) REFERENCES nbOfseat(id) ON DELETE SET NULL,
             FOREIGN KEY (review_id) REFERENCES review(id)ON DELETE SET NULL,
@@ -260,19 +260,18 @@ class InitDb
 
 
     //-----------------------------------function add colors in table --------------------------------------------
-    public function addColors()
-    {
+    public function addColors() {
         $colors = ['Rouge', 'Blanc', 'Gris', 'Noir', 'Noir Mat', 'Bleu Turquoise', 'Bleu Marine'];
         foreach ($colors as $color) {
-            $sql = "INSERT INTO color (text) VALUES (?)";
+            $sql = "INSERT IGNORE INTO color (text) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
-            if ($stmt === false) {
-                throw new Exception($this->conn->error);
-            }
+            // if ($stmt === false) {
+            //     throw new Exception($this->conn->error);
+            // }
             $stmt->bind_param("s", $color);
             $stmt->execute();
         }
-    }
+    }    
     //-----------------------------------------------------------------------------------------------------------
 
 
@@ -281,8 +280,9 @@ class InitDb
     public function addFakeReviews()
     {
         $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Faker\Provider\fr_FR\Text($faker));
         for ($i = 0; $i < 10; $i++) {
-            $content = $faker->text;
+            $content = $faker->text();
             $sql = "INSERT INTO review (content) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("s", $content);
@@ -298,8 +298,11 @@ class InitDb
     {
         $seatNumbers = [2, 3, 4, 5, 7, 9];
         foreach ($seatNumbers as $number) {
-            $sql = "INSERT INTO nbOfseat (nb_of_seat_int) VALUES (?)";
+            $sql = "INSERT IGNORE INTO nbOfseat (nb_of_seat_int) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception($this->conn->error);
+            }
             $stmt->bind_param("i", $number);
             $stmt->execute();
         }
@@ -313,12 +316,14 @@ class InitDb
     {
         $brands = ['Nissan', 'Renault', 'Volvo', 'Tesla', 'Fiat', 'Peugeot', 'Volkswagen', 'Ferrari', 'Hyundai', 'Kia'];
         foreach ($brands as $brand) {
-            $sql = "INSERT INTO brand (text) VALUES (?)";
+            $sql = "INSERT IGNORE INTO brand (text) VALUES (?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("s", $brand);
             $stmt->execute();
+        
         }
     }
+    
     //---------------------------------------------------------------------------------------------------------
 
 

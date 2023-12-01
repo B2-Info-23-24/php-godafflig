@@ -207,7 +207,7 @@ class Manager
 
     public function getColors() {
         $colors = [];
-        $sql = "SELECT id, text FROM color"; // Adaptez avec le nom réel de votre colonne et table
+        $sql = "SELECT id, text FROM color"; 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
             $result = $stmt->get_result();
@@ -236,5 +236,78 @@ class Manager
         }
         return $brands;
     }
+    public function getReviews() {
+        $brands = [];
+        $sql = "SELECT id, content FROM review"; // Adaptez avec le nom réel de votre colonne et table
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $brands[] = $row;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Failed to prepare query: " . $this->conn->error);
+        }
+        return $brands;
+    }
+    
+    public function insererUtilisateur($last_name, $first_name, $email, $password, $phone_number)
+    {
+        $query = $this->conn->prepare("INSERT INTO users ( lastName, firstName,email, passwordUser , phoneNumber ) VALUES ( ?, ?, ?, ?, ?)");
+
+        if ($query === false) {
+            die("Erreur lors de la préparation de la requête post: " . htmlspecialchars($this->conn->error));
+        }
+
+        $query->bind_param("sssss", $last_name, $first_name, $email, $password, $phone_number);
+        $query->execute();
+        $query->close();
+    }
+    public function createvehicule($nbOfseat, $review_id, $color_id, $priceDay, $brand_id)
+{
+    try {
+        $query = $this->conn->prepare("INSERT INTO vehicules (nbOfseat_id, review_id, color_id, priceDay, brand_id) VALUES (?, ?, ?, ?, ?)");
+
+        if ($query === false) {
+            throw new \Exception("Erreur lors de la préparation de la requête : " . htmlspecialchars($this->conn->error));
+        }
+
+        if (!$query->bind_param("iiiii", $nbOfseat, $review_id, $color_id, $priceDay, $brand_id)) {
+            throw new \Exception("Erreur lors du bind_param : " . htmlspecialchars($query->error));
+        }
+
+        if (!$query->execute()) {
+            throw new \Exception("Erreur lors de l'exécution de la requête : " . htmlspecialchars($query->error));
+        }
+
+        $query->close();
+    } catch (\Exception $e) {
+        // Ici, vous pouvez gérer l'erreur ou la retransmettre
+        throw $e;
+    }
+}
+public function recordExists($tableName, $id) {
+    // Préparation de la requête SQL. Utilisation de sprintf pour insérer le nom de la table
+    // Attention : cela peut être vulnérable si le nom de la table n'est pas contrôlé
+    $sql = sprintf("SELECT COUNT(*) FROM %s WHERE id = ?", $tableName);
+
+    // Préparation de la requête
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        throw new \Exception("Erreur de préparation de la requête : " . $this->conn->error);
+    }
+
+    // Liaison du paramètre et exécution de la requête
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    // Récupération et retour du résultat
+    $result = $stmt->get_result()->fetch_row();
+    $stmt->close();
+
+    return $result[0] > 0;
+}
+
 
 }

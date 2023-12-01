@@ -45,6 +45,7 @@ class AdminController
         $seats = $this->Manager->getSeats(); // Récupère les sièges disponibles de la BDD
         $colors = $this->Manager->getColors(); // Récupère les couleurs disponibles de la BDD
         $brands = $this->Manager->getBrands(); // Récupère les marques disponibles de la BDD
+        $reviews = $this->Manager->getReviews(); // Récupère les marques disponibles de la BDD
 
         //----------------------------------------------------------------------------
 
@@ -54,7 +55,8 @@ class AdminController
             'user' => $userSessionData, 'brandForm' => $brandFormHtml, 'nbofseatForm' => $NbOfSeatFormHtml, 'colorsForm' => $colorsFormHtml, 'userForm' => $usersFormHtml,
             'carsForm' => $carsFormhtml, 'seats' => $seats,
             'colors' => $colors,
-            'brands' => $brands
+            'brands' => $brands,
+            'reviews' => $reviews
         ]);
         //-----------------------------------------------------------------------------
         //----------------check user isadmin or not  ------------------------------------
@@ -211,4 +213,52 @@ class AdminController
     //         echo '<script>window.location.href = "/admin";</script>';
     //     }
     // }
+    public function createVehicle()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                // Récupérer les données du formulaire
+                $color_id = isset($_POST['color_id']) ? $_POST['color_id'] : null;
+                $nbOfseat_id = isset($_POST['nbOfseat_id']) ? $_POST['nbOfseat_id'] : null;
+                $review_id = isset($_POST['review_id']) ? $_POST['review_id'] : null;
+                $priceDay = isset($_POST['priceDay']) ? $_POST['priceDay'] : null;
+                $brand_id = isset($_POST['brandName']) ? $_POST['brandName'] : null;
+                echo 'colorid : ' . $color_id . '<br>';
+                echo 'nbofseatid : ' . $nbOfseat_id . '<br>';
+                echo 'brandid : '  .  $brand_id . '<br>';
+
+                $missingIds = [];
+
+                if (!$this->Manager->recordExists('color', $color_id)) {
+                    $missingIds[] = "color";
+                }
+                if (!$this->Manager->recordExists('review', $review_id)) {
+                    $missingIds[] = "review";
+                }
+                if (!$this->Manager->recordExists('nbOfseat', $nbOfseat_id)) {
+                    $missingIds[] = "nbOfseat";
+                }
+                if (!$this->Manager->recordExists('brand', $brand_id)) {
+                    $missingIds[] = "brand";
+                }
+
+                if (!empty($missingIds)) {
+                    echo "ID non trouvé pour : " . implode(', ', $missingIds) . ".";
+                    return; // Sortir de la fonction si un ou plusieurs ID ne sont pas valides
+                }
+
+                // Insérer le nouveau véhicule
+                $this->Manager->createVehicule($nbOfseat_id, $review_id, $color_id, $priceDay, $brand_id);
+
+                // Redirection en cas de succès
+                echo '<script>window.location.href = "/admin";</script>';
+            } catch (\Exception $e) {
+                // Gérer l'erreur
+                echo "Erreur lors de la création du véhicule : " . $e->getMessage();
+            }
+        } else {
+            // Redirection si la méthode n'est pas POST
+            echo '<script>window.location.href = "/admin";</script>';
+        }
+    }
 }
