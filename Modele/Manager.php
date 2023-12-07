@@ -148,16 +148,13 @@ class Manager
             $affectedRows = $query->affected_rows;
             $query->close();
 
-            // Valider la transaction
             $this->conn->commit();
 
-            // Retourner vrai si un enregistrement a été mis à jour, faux autrement
             return $affectedRows > 0;
         } catch (Exception $e) {
             // Annuler la transaction en cas d'erreur
             $this->conn->rollback();
-            throw $e; // Il est préférable de relancer l'exception pour permettre une gestion d'erreur plus flexible en amont
-        }
+            throw $e;  }
     }
     public function updateUser($userId, $userData)
     {
@@ -191,7 +188,7 @@ class Manager
     }
     public function getSeats() {
         $seats = [];
-        $sql = "SELECT id, nb_of_seat_int FROM nbOfseat"; // Adaptez avec le nom réel de votre colonne et table
+        $sql = "SELECT id, nb_of_seat_int FROM nbOfseat"; 
         if ($stmt = $this->conn->prepare($sql)) {
             $stmt->execute();
             $result = $stmt->get_result();
@@ -203,6 +200,8 @@ class Manager
             throw new Exception("Failed to prepare query: " . $this->conn->error);
         }
         return $seats;
+        print_r($seats);
+
     }
 
     public function getColors() {
@@ -235,6 +234,7 @@ class Manager
             throw new Exception("Failed to prepare query: " . $this->conn->error);
         }
         return $brands;
+        
     }
     // public function getReviews() {
     //     $brands = [];

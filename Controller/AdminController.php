@@ -240,19 +240,17 @@ class AdminController
                 }
                 if (!empty($missingIds)) {
                     echo "ID non trouvé pour : " . implode(', ', $missingIds) . ".";
-                    return; // Sortir de la fonction si un ou plusieurs ID ne sont pas valides
+                    return; 
                 }
-                // Insérer le nouveau véhicule
+                // Insert cars
                 $this->Manager->createVehicule($nbOfseat_id, $review, $color_id, $priceDay, $brand_id, $nbofstar);
 
-                // Redirection en cas de succès
                 echo '<script>window.location.href = "/admin";</script>';
             } catch (\Exception $e) {
-                // Gérer l'erreur
                 echo "Erreur lors de la création du véhicule : " . $e->getMessage();
             }
         } else {
-            // Redirection si la méthode n'est pas POST
+            // Redirection if method is not POST
             echo '<script>window.location.href = "/admin";</script>';
         }
     }

@@ -6,28 +6,39 @@
 		<div class="vehicle-item">
 			<h3>Vehicule ID:
 				{{ vehicul.id }}</h3>
-			<p>Number of Seats:
-				{{ vehicul.numberOfSeats }}</p>
-			<p>Review ID:
-				{{ vehicul.review_id }}</p>
-			<p>Color:
+			<p>Nombre de sièges :
+				{{ vehicul.nb_of_seat_int }}</p>
+			<p>Note :
+				{{ vehicul.nb_of_star }}/5</p>
+			<p>Couleur :
 				{{ vehicul.colorName }}</p>
-			<p>Price per Day:
-				{{ vehicul.priceDay }}</p>
-			<p>BRAND:
+			<p>Prix par jour :
+				{{ vehicul.priceDay }}€</p>
+			<p>Marque :
 				{{ vehicul.brandName }}</p>
 			<img src="{{ vehicul.image }}" alt="vehicule Image" class="vehicule-image">
 		</div>
-		<div>
-			<form action="/booking" method="post">
-				<input type="text" value="{{ vehicul.id }}" hidden name="vehiculeid">
-				<label for="booking">reserver ce vehicule:</label>
-				<label for="">date de debut</label>
-				<input type="date" name="startdate">
-				<label for="">date de fin</label>
-				<input type="date" name="enddate">
-				<button onclick="location.href='/rental?vehicule_id={{vehicule.id}}'">Rent Vehicle</button>
-			</form>
-		</div>
+
+		{% if isUserLoggedIn %}
+			<div>
+
+				<button onclick="location.href='/ajouterFavori?vehicule_id={{vehicul.id}}'">Favoris</button>
+				<form action="/booking" method="post">
+					<input type="text" value="{{ vehicul.id }}" hidden name="vehiculeid">
+					<label for="booking">reserver ce vehicule:</label>
+					<label for="">date de debut</label>
+					<input type="date" name="startdate">
+					<label for="">date de fin</label>
+					<input type="date" name="enddate">
+					<button onclick="location.href='/rental?vehicule_id={{vehicule.id}}'">Rent Vehicle</button>
+				</form>
+			</div>
+
+		{% else %}
+			<p>Veuillez vous connecter pour reserver ce vehicule.</p>
+			<button>
+				<a href="/connexion">connexion</a>
+			</button>
+		{% endif %}
 
 	{% endblock %}

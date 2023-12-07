@@ -85,7 +85,7 @@ class ReservationManager
                 $stmt->close();
             }
         } else {
-            echo "Utilisateur non identifié.";
+            // echo "Utilisateur non identifié.";
         }
 
         return $reservations;

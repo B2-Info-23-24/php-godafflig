@@ -239,3 +239,28 @@ body {
     width: 100px; /* ou toute autre taille appropriée */
     height: auto;
 }
+.rating {
+    direction: rtl; /* Pour aligner les étoiles de droite à gauche */
+    display: flex; /* Utiliser flexbox pour aligner les étoiles et la note numérique */
+    align-items: center; /* Centrer verticalement les étoiles et la note */
+}
+
+.rating input {
+    display: none; /* Cache les inputs radio */
+}
+
+.rating label {
+    font-size: 30px;
+    color: grey;
+    cursor: pointer;
+}
+
+.rating input:checked ~ label {
+    color: gold;
+}
+
+.note-numerique {
+    margin-left: 10px; /* Espacement entre les étoiles et la note numérique */
+    font-size: 20px;
+    line-height: 30px; /* Aligner verticalement avec les étoiles */
+}

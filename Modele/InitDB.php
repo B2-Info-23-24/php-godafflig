@@ -53,6 +53,14 @@ class InitDb
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
+            "CREATE TABLE IF NOT EXISTS `favoris` (
+                `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(10) unsigned NOT NULL, -- L'ID de l'utilisateur associé à la réservation
+                `vehicle_id` int(11) NOT NULL, -- L'ID du véhicule associé à la réservation
+                 PRIMARY KEY (`id`),
+                FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
             "CREATE TABLE IF NOT EXISTS vehicules (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -68,25 +76,6 @@ class InitDb
             FOREIGN KEY (color_id) REFERENCES color(id) ON DELETE SET NULL,
          FOREIGN KEY (brand_id) REFERENCES brand(id) ON DELETE SET NULL
 )        ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
-
-
-
-            "CREATE TABLE IF NOT EXISTS `vehicule_color` (
-                `vehicle_id` int(11) NOT NULL,
-                `color_id` int(11) NOT NULL,
-                PRIMARY KEY (`vehicle_id`, `color_id`),
-                FOREIGN KEY (`vehicle_id`) REFERENCES vehicules(`id`),
-                FOREIGN KEY (`color_id`) REFERENCES color(`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
-
-            "CREATE TABLE IF NOT EXISTS `vehicule_brand` (
-                `vehicle_id` int(11) NOT NULL,
-                `brand_id` int(11) NOT NULL,
-                PRIMARY KEY (`vehicle_id`, `brand_id`),
-                FOREIGN KEY (`vehicle_id`) REFERENCES vehicules(`id`),
-                FOREIGN KEY (`brand_id`) REFERENCES brand(`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
-
 
 
             "CREATE TABLE IF NOT EXISTS `users` (
@@ -132,26 +121,29 @@ class InitDb
 
 
     //----------------------ajoute un fake user ---------------------------------------------------------------------------------------------------------
-    public function addFakeUser()
+    public function addFakeUsers()
     {
         $faker = \Faker\Factory::create();
 
-        $lastName = $this->conn->real_escape_string($faker->lastName);
-        $firstName = $this->conn->real_escape_string($faker->firstName);
-        $email = $this->conn->real_escape_string($faker->email);
-        // Générer un mot de passe factice - à remplacer par un mot de passe hashé pour une utilisation réelle
-        $password = $this->conn->real_escape_string($faker->password);
-        $phoneNumber = $faker->randomNumber(9);
-        $isAdmin = 0; // 0 pour false, 1 pour true
+        for ($i = 0; $i < 10; $i++) {
+            $lastName = $this->conn->real_escape_string($faker->lastName);
+            $firstName = $this->conn->real_escape_string($faker->firstName);
+            $email = $this->conn->real_escape_string($faker->email);
+            // Générer un mot de passe factice - à remplacer par un mot de passe hashé pour une utilisation réelle
+            $password = $this->conn->real_escape_string($faker->password);
+            $phoneNumber = $faker->randomNumber(9);
+            $isAdmin = 0; // 0 pour false, 1 pour true
 
-        $sql = "INSERT INTO users (lastName, firstName, email, passwordUser, phoneNumber, isAdmin) VALUES ('$lastName', '$firstName', '$email', '$password', $phoneNumber, $isAdmin)";
+            $sql = "INSERT INTO users (lastName, firstName, email, passwordUser, phoneNumber, isAdmin) VALUES ('$lastName', '$firstName', '$email', '$password', $phoneNumber, $isAdmin)";
 
-        try {
-            $this->conn->query($sql);
-        } catch (Exception $e) {
-            echo $e->getMessage();
+            try {
+                $this->conn->query($sql);
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
         }
     }
+
     //-------------------------------------------------------------------------------------------------------------
 
 
@@ -174,7 +166,7 @@ class InitDb
             if ($stmt === false) {
                 throw new Exception("Unable to prepare statement: " . $this->conn->error);
             }
-            for ($i = 0; $i < 5; $i++) { 
+            for ($i = 0; $i < 10; $i++) {
                 $nbOfseat_id = $faker->randomElement($seat_ids);
                 $review = $faker->sentence();
                 $color_id = $faker->randomElement($color_ids);
@@ -215,7 +207,8 @@ class InitDb
             $randomImage = $images[array_rand($images)];
             return $folderPath . '/' . $randomImage;
         } else {
-            return 'path/to/default/image.png'; }
+            return 'path/to/default/image.png';
+        }
     }
     //-------------------------------------------------------------------------------------------------------------
 
@@ -290,7 +283,8 @@ class InitDb
 
     public function addBrands()
     {
-        echo 'addbrand ' . "\n";
+        echo   "\n " . ' database is init  ' . "\n";
+        echo "if you are an admin you can register in your account with  " . "\n" . "password : admin " . "\n " . "mail : " . "admin.fr" . "\n" . "enjoy ca_roule_mapoule" . "\n";
         $brands = ['Nissan', 'Renault', 'Volvo', 'Tesla', 'Fiat', 'Peugeot', 'Volkswagen', 'Ferrari', 'Hyundai', 'Kia'];
         foreach ($brands as $brand) {
             $sql = "INSERT IGNORE INTO brand (text) VALUES (?)";
@@ -304,17 +298,44 @@ class InitDb
 
 
 
+
+    //------------------------------------------Méthode pour ajouter un utilisateur administrateur---------------------------------------------------------------
+    public function addAdminUser($email, $password, $lastname, $firstname)
+    {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Hashage du mot de passe
+        $isAdmin = 1; // Valeur pour un administrateur
+
+        $sql = "INSERT INTO users (email, passwordUser, isAdmin , lastName, firstName) VALUES (?, ?, ?, ?,?)";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception("Unable to prepare statement: " . $this->conn->error);
+            }
+
+            $stmt->bind_param("ssiss", $email, $hashedPassword, $isAdmin, $lastname, $firstname);
+            $stmt->execute();
+        } catch (Exception $e) {
+            echo "Erreur lors de l'ajout de l'administrateur : " . $e->getMessage();
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------
+
+
+
+
     //----------------------------------function initializeDatabaseWithData-------------------------------------------------------------
     public function initializeDatabaseWithData()
     {
-        $this->createTable(); // Créez les tables
-        $this->addColors(); // Ajoutez des couleurs
-        $this->addBrands(); // Ajoutez des marques
-        $this->addNbOfSeats(); // Ajoutez des nombres de sièges
-        $this->addFakeVehicules(); // Ajoutez des véhicules fictifs
-        $this->addFakeUser(); 
-    
+        $this->createTable();
+        $this->addColors();
+        $this->addBrands();
+        $this->addNbOfSeats();
+        $this->addFakeVehicules();
+        $this->addFakeUsers();
+        $this->addAdminUser("admin@fr", "admin", "admin", "garage"); // Ajoutez ici l'utilisateur administrateur
     }
+
     //---------------------------------------------------------------------------------------------------------
 }
 $initDb = new InitDb();

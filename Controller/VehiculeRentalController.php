@@ -67,6 +67,7 @@ class VehiculeRentalController
         return null;
     }
 
+    
 
     public function rentVehicule()
     {
@@ -86,14 +87,14 @@ class VehiculeRentalController
                 // Calculer le nombre de jours
                 $diff = date_diff(date_create($startDate), date_create($endDate));
                 $nbDays = $diff->format("%a");
-                echo "<br>" ."le nombre de jour reserve est egale a : " . $nbDays . "journée";
+                echo "<br>" . "le nombre de jour reserve est egale a : " . $nbDays . "journée";
                 // Récupérer le priceDay du véhicule
                 $priceDay = $this->vehiculeManager->getVehiclePricePerDay($vehicleId); // Implémentez cette méthode selon votre logique de base de données
-                echo "<br>" ." le prix pas journée est de  : " . $priceDay . "€";
+                echo "<br>" . " le prix pas journée est de  : " . $priceDay . "€";
                 // Calculer le prix total
                 $totalprice = $priceDay * ($nbDays + 1); // +1 car la journée de départ compte
-                echo "<br>" ."le prix total est de : " . $totalprice  . "€";
-                
+                echo "<br>" . "le prix total est de : " . $totalprice  . "€";
+
 
                 // Création de la réservation
                 $reservationCreated = $this->reservationsManager->createReservation($userId, $vehicleId, $startDate, $endDate, $totalprice);
@@ -110,7 +111,7 @@ class VehiculeRentalController
 
     public function viewVehicule()
     {
-
+        $session = $this->getUserSession(); // Cette méthode doit initialiser $_SESSION['userSession']
         // Vérification si l'ID du véhicule est présent dans l'URL
         if (isset($_GET['vehicule_id'])) {
             $vehiculeId = intval($_GET['vehicule_id']); // Conversion en entier pour plus de sécurité
@@ -119,7 +120,7 @@ class VehiculeRentalController
             if ($vehiculeManagerid) {
                 // Affichage des informations du véhicule
                 // Par exemple, avec un système de template
-                $this->twig->display('booking/booking.html.twig', ['vehicul' => $vehiculeManagerid]);
+                $this->twig->display('booking/booking.html.twig', ['vehicul' => $vehiculeManagerid, 'isUserLoggedIn' => $session !== null, 'user' => $session]);
             } else {
                 // Gestion du cas où le véhicule n'est pas trouvé
                 echo "Véhicule non trouvé";
@@ -129,6 +130,9 @@ class VehiculeRentalController
             echo "ID de véhicule non spécifié ou invalide";
         }
     }
+
+
+
 }
 
 // Création du contrôleur quelque part dans votre application

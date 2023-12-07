@@ -2,83 +2,72 @@
 {% block body %}
 	<div class="container">
 		{% if user %}
-			<div class="titre">Bienvenue sur ta page profil ,
+			<div class="titre">Bienvenue sur ta page profil,
 				{{ user.lastName }}
-				{{ user.firstName }}
+				{{ user.firstName }}</div>
 
-				<div class="reservations-table">
-					<h2>Mes réservations</h2>
-					<table>
-						<thead>
+			<div class="reservations-table">
+				<h2>Mes réservations</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Vehicule ID</th>
+							<th>Nombre de sièges</th>
+							<th>Couleur</th>
+							<th>Prix par jour</th>
+							<th>Marque</th>
+							<th>Image</th>
+							<th>Actions</th>
+							<!-- Colonne pour les actions comme ajouter un avis -->
+						</tr>
+					</thead>
+					<tbody>
+						{% for reservation in reservation %}
 							<tr>
-								<th>Vehicule ID</th>
-								<th>Nombre de sièges</th>
-								<th>Couleur</th>
-								<th>Prix par jour</th>
-								<th>Marque</th>
-								<th>Image</th>
+								<td>{{ reservation.vehicle_id }}</td>
+								<td>{{ reservation.numberOfSeats }}</td>
+								<td>{{ reservation.colorName }}</td>
+								<td>{{ reservation.priceDay }}€</td>
+								<td>{{ reservation.brandName }}</td>
+								<td><img src="{{ reservation.image }}" alt="Image du véhicule" class="vehicle-image-small"></td>
+								<td>
+									<form action="/addreview" method="post">
+										<input type="hidden" name="vehicule_id" value="{{ reservation.vehicle_id }}">
+										<div class="rating">
+											{% set maxRating = 5 %}
+											{% for i in 1..maxRating %}
+												<input type="radio" id="star{{ reservation.vehicle_id }}-{{ i }}" name="rating" value="{{ i }}"/>
+												<label for="star{{ reservation.vehicle_id }}-{{ i }}" title="{{ i }} étoiles">&#9733;</label>
+											{% endfor %}
+											<span class="note-numerique">{{ reservation.nb_of_star }}/{{ maxRating }}</span>
+										</div>
+										<textarea name="review" placeholder="Laissez un avis sur ce véhicule"></textarea>
+										<button type="submit">Soumettre l'avis</button>
+									</form>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{% for reservation in reservation %}
-								<tr>
-									<td>{{ reservation.vehicle_id }}</td>
-									<td>{{ reservation.numberOfSeats }}</td>
-									<td>{{ reservation.colorName }}</td>
-									<td>{{ reservation.priceDay }}€</td>
-									<td>{{ reservation.brandName }}</td>
-									<td><img src="{{ reservation.image }}" alt="Image du véhicule" class="vehicle-image-small"></td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 
-			{% else %}
-				<p>Utilisateur non connecté.</p>
-			{% endif %}
-			!</div>
+			<h2>Mes Favoris</h2>
+			{% for favori in favoris %}
 
-
-	</div>
-
-
-	<div class="container-stats">
-		<div class="grey-box">
-			<div class="grey-title">Changer de nom d'utilisateur</div>
-			<form class="formulaire" action="/update-username" method="POST">
-				<input class="input" type="text" name="oldusername" placeholder="Ancien nom d'utilisateur..." required/>
-				<input class="input" type="text" name="newusername" placeholder="Nouveau nom d'utilisateur..." required/>
-				<input class="input" type="text" name="newusernameconfirm" placeholder="Confirmer nouveau nom..." required/>
 				<div>
-					<button class="btn" type="submit">Confirmer</button>
-				</div>
-			</form>
-		</div>
+					<p>ID Véhicule Favori:
+						{{ favori.vehicle_id }}</p>
 
-		<div class="grey-box">
-			<div class="grey-title">Changer de mot de passe</div>
-			<form class="formulaire" action="/update-password" method="POST">
-				<input class="input" type="password" name="oldpassword" placeholder="Ancien mot de passe..." required/>
-				<input class="input" type="password" name="newpassword" placeholder="Nouveau mot de passe..." required/>
-				<input class="input" type="password" name="newpwdconfirm" placeholder="Confirmer nouveau mot de passe..." required/>
-
-				<div class="">
-					<button class="btn" type="submit">Confirmer</button>
 				</div>
-			</form>
-		</div>
+				<button>
+					<a href="/retirerFavori?vehicule_id={{ favori.vehicle_id }}">Retirer des favoris</a>
+				</button>
+			{% endfor %}
+
+		{% else %}
+			<p>Utilisateur non connecté.</p>
+		{% endif %}
 	</div>
 
-
-	<div class="center">
-		<form action="/delete-account" onsubmit="if(!confirm('Es-tu sûr.e de vouloir nous quitter ?')){return false;}">
-			<button type="submit" class="btn">Supprimer mon compte</button>
-		</form>
-	</div>
-	<div class="center">
-		<button class="btn-logout">
-			<a href="/disconnect">deconnexion</button>
-		</a>
-	</a>
-</div>{% endblock %}
+	<!-- ... Autres sections ... -->
+{% endblock %}

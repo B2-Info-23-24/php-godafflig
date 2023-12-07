@@ -54,7 +54,7 @@ ul {
 }
 .sidebar {
     width: 300px;
-    position: fixed;
+    /* position: fixed; */
     left: 0;
     top: 100px;
     height: 100%;
@@ -103,6 +103,16 @@ ul {
     padding-left: 220px; /* Adjust so the content does not overlap the sidebar */
     
 }
+.checkbox {
+    display: flex;
+    align-items: center; /* Align verticalement les éléments */
+    margin-bottom: 10px; /* Espacement entre les cases à cocher */
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 10px; /* Espacement entre la case à cocher et le label */
+}
+
 
 .vehicle-item {
     

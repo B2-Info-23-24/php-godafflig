@@ -219,26 +219,20 @@
 				<option value="{{ color.id }}">{{ color.text }}</option>
 			{% endfor %}
 		</select>
-
 		<label for="brand">Marque:</label><br>
 		<select id="brand" name="brandName" required>
 			{% for brand in brands %}
 				<option placeholder="marque" value="{{ brand.id }}">{{ brand.text }}</option>
 			{% endfor %}
 		</select><br>
-
 		<label for="priceDay">Prix par jour:</label><br>
 		<input type="number" id="priceDay" name="priceDay" required step="10"><br>
-
 		<label for="priceDay">note 0/5</label><br>
 		<input type="number" name="nbofstar" required step="1" min="0" max="5"><br>
-
 		<label for="brand">review:</label><br>
 		<input
 		type="text" name="review">
-
-		{# <label for="image">URL de l'image:</label><br>
-																	<input type="text" id="image" name="image" required><br> #}
+		{# <label for="image">URL de l'image:</label><br> <input type="text" id="image" name="image" required><br> #}
 
 		<input type="submit" value="Ajouter le véhicule">
 	</form>
