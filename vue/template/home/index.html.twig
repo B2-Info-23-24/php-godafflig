@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class="main-container">
+		<div class="vehicle-container">
+			{% for vehicule in vehicules %}
+				<div class="vehicle-item">
+					<h3>Vehicule ID:
+						{{ vehicule.id }}</h3>
+					<p>Nombre de place:
+						{{ vehicule.numberOfSeats }}</p>
+					<p>Color:
+						{{ vehicule.colorName }}</p>
+					<p>Prix par jour:
+						{{ vehicule.priceDay }}€</p>
+					<p>Marque:
+						{{ vehicule.brandName }}</p>
+					<img src="{{ vehicule.image }}" alt="vehicule Image" class="vehicule-image">
+					<button onclick="location.href='/rental?vehicule_id={{vehicule.id}}'">Réserver</button>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

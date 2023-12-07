@@ -1,0 +1,14 @@
+.vehicle-rating .star-rating {
+  font-family: Arial, sans-serif;
+  /* Utilisez une police qui inclut les symboles d'étoiles */
+  color: gold;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.vehicle-rating .rating-out-of {
+  font-size: 0.8em;
+  color: grey;
+}

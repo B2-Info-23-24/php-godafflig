@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.header {
+    background-color: rgb(180, 85, 85);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+
+.menu_right {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0px;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    width: 100%;
+    /* Le menu occupe toute la largeur */
+    padding: 0;
+    margin: 0;
+
+}
+
+.menu .right-item:not(:first-child) {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+
+.voiture ul {
+
+    border: solid 1px black;
+    list-style-type: none;
+}
+
+.vitrine_voiture {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    list-style: none;
+}
+.sidebar {
+    width: 300px;
+    /* position: fixed; */
+    left: 0;
+    top: 100px;
+    height: 100%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0px 5px rgba(0,0,0,0.2);
+    overflow-y: auto;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h3 {
+    margin-bottom: 10px;
+}
+
+.checkbox {
+    margin-bottom: 5px;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 10px;
+}
+.main-container {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-filter {
+    /* Adjust width as needed for your filter sidebar */
+    width: 200px; /* Example width */
+    /* If you want the sidebar to always be visible on scroll: */
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.vehicle-container {
+    margin-top: 30px;
+ 
+    flex-grow: 1;
+    max-width: 800px; /* Adjust this value based on your desired maximum width */
+    padding-left: 220px; /* Adjust so the content does not overlap the sidebar */
+    
+}
+.checkbox {
+    display: flex;
+    align-items: center; /* Align verticalement les éléments */
+    margin-bottom: 10px; /* Espacement entre les cases à cocher */
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 10px; /* Espacement entre la case à cocher et le label */
+}
+
+
+.vehicle-item {
+    
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center; /* Center text and content within each vehicle item */
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+}
+
+.vehicle-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+

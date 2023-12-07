@@ -1,0 +1,73 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class="container">
+		{% if user %}
+			<div class="titre">Bienvenue sur ta page profil,
+				{{ user.lastName }}
+				{{ user.firstName }}</div>
+
+			<div class="reservations-table">
+				<h2>Mes réservations</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Vehicule ID</th>
+							<th>Nombre de sièges</th>
+							<th>Couleur</th>
+							<th>Prix par jour</th>
+							<th>Marque</th>
+							<th>Image</th>
+							<th>Actions</th>
+							<!-- Colonne pour les actions comme ajouter un avis -->
+						</tr>
+					</thead>
+					<tbody>
+						{% for reservation in reservation %}
+							<tr>
+								<td>{{ reservation.vehicle_id }}</td>
+								<td>{{ reservation.numberOfSeats }}</td>
+								<td>{{ reservation.colorName }}</td>
+								<td>{{ reservation.priceDay }}€</td>
+								<td>{{ reservation.brandName }}</td>
+								<td><img src="{{ reservation.image }}" alt="Image du véhicule" class="vehicle-image-small"></td>
+								<td>
+									<form action="/addreview" method="post">
+										<input type="hidden" name="vehicule_id" value="{{ reservation.vehicle_id }}">
+										<div class="rating">
+											{% set maxRating = 5 %}
+											{% for i in 1..maxRating %}
+												<input type="radio" id="star{{ reservation.vehicle_id }}-{{ i }}" name="rating" value="{{ i }}"/>
+												<label for="star{{ reservation.vehicle_id }}-{{ i }}" title="{{ i }} étoiles">&#9733;</label>
+											{% endfor %}
+											<span class="note-numerique">{{ reservation.nb_of_star }}/{{ maxRating }}</span>
+										</div>
+										<textarea name="review" placeholder="Laissez un avis sur ce véhicule"></textarea>
+										<button type="submit">Soumettre l'avis</button>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<h2>Mes Favoris</h2>
+			{% for favori in favoris %}
+
+				<div>
+					<p>ID Véhicule Favori:
+						{{ favori.vehicle_id }}</p>
+
+				</div>
+				<button>
+					<a href="/retirerFavori?vehicule_id={{ favori.vehicle_id }}">Retirer des favoris</a>
+				</button>
+			{% endfor %}
+
+		{% else %}
+			<p>Utilisateur non connecté.</p>
+		{% endif %}
+	</div>
+
+	<!-- ... Autres sections ... -->
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+<h2>Connecter un utilisateur</h2>
+
+<form action="/login" method="post"> <!-- Remarquez l'action modifiée ici -->
+  <label for="username">email</label><br>
+  <input type="text" id="email" name="email"><br> <!-- Valeur en dur -->
+  
+  <label for="password">Mot de passe:</label><br>
+  <input type="password" id="passwordUser" name="passwordUser" ><br> <!-- Valeur en dur -->
+  <input type="submit" value="se connecter">
+  <button>
+			<a href="/inscription">vous n'avez pas encore de compte c'est par ici -> inscription</a>
+		</button>
+  
+</form>
+
+{% endblock %}

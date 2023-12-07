@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+{% block header %}
+	<div class="header">
+
+		{% if user is null %}
+
+			<ul class="menu">
+				<li class="left-item">
+					<a href="/home">home</a>
+				</li>
+			</ul>
+			<ul class="menu_right">
+				<li class="right-items">
+					<a href="/inscription">inscription</a>
+				</li>/
+				<li class="right-items">
+					<a href="/connexion">connexion</a>
+				</li>
+			</ul>
+			
+		{% else %}
+		
+			<li class="left-item">
+				<a href="/home">home</a>
+			</li>
+			<li>
+				<a href="/Myaccount">Myaccount</a>
+			</li>
+			{% if user.isAdmin == 1 %}
+                    <!-- Ici, ajoutez les éléments spécifiques aux admins -->
+                    <li class="right-items">
+                        <a href="/admin">Admin Dashboard</a>
+                    </li>
+                {% endif %}
+			<li class="right-items">
+				<form class="disconnect" action="/disconnect" method="post">
+					<input type="submit" value="Disconnect">
+				</form>
+			</li>
+		{% endif %}
+	</ul>
+</div>{% endblock %}
