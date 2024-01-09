@@ -344,5 +344,4 @@ class InitDb
 }
 $initDb = new InitDb();
 $initDb->initializeDatabaseWithData();
-$initDb->createTable();
 $initDb->closeConnection();
