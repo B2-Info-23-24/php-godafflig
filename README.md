@@ -28,9 +28,6 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Enable Apache mod_rewrite
 
-# Copy source files and the .htaccess
-COPY src/ /var/www/html/
-
 # Adjust Apache to allow .htaccess files and enable overrides
 RUN echo '<Directory "/var/www/html">' > /etc/apache2/conf-available/override.conf \
     && echo '    AllowOverride All' >> /etc/apache2/conf-available/override.conf \
@@ -38,7 +35,7 @@ RUN echo '<Directory "/var/www/html">' > /etc/apache2/conf-available/override.co
     && a2enconf override
 
 # Permissions
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html && chmod 644 /var/www/html/.htaccess
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 RUN a2enmod rewrite
 
 RUN service apache2 restart
@@ -54,8 +51,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./src:/var/www/html
-      - ./src/.htaccess:/var/www/html/.htaccess
+      - .:/var/www/html
   mysql:
     image: mysql:5.7
     environment:
