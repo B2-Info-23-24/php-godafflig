@@ -5,7 +5,7 @@
 #launch composer docker 
 docker-compose up -d
 # display id container 
-dokcer ps 
+docker ps 
 #get id 
 #for init the db follow these step , connecte to your container with the id 
 docker exec -it "idcontainer" /bin/bash  ou /bin/sh
