@@ -53,14 +53,7 @@ class InitDb
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
 
-            "CREATE TABLE IF NOT EXISTS `favoris` (
-                `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-                `user_id` int(10) unsigned NOT NULL, -- L'ID de l'utilisateur associé à la réservation
-                `vehicle_id` int(11) NOT NULL, -- L'ID du véhicule associé à la réservation
-                 PRIMARY KEY (`id`),
-                FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
-                FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+
 
             "CREATE TABLE IF NOT EXISTS vehicules (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -90,6 +83,15 @@ class InitDb
               CONSTRAINT unique_email_phoneNumber UNIQUE (`email`, `phoneNumber`)
             ) ENGINE = InnoDB AUTO_INCREMENT = 14 DEFAULT CHARSET = latin1",
 
+            "CREATE TABLE IF NOT EXISTS `favoris` (
+                `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(10) unsigned NOT NULL, -- L'ID de l'utilisateur associé à la réservation
+                `vehicle_id` int(11) NOT NULL, -- L'ID du véhicule associé à la réservation
+                 PRIMARY KEY (`id`),
+                FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+
             "CREATE TABLE IF NOT EXISTS `reservations` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` int(10) unsigned NOT NULL, -- L'ID de l'utilisateur associé à la réservation
@@ -101,6 +103,8 @@ class InitDb
             FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
             FOREIGN KEY (`vehicle_id`) REFERENCES `vehicules`(`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
+
+
         ];
         foreach ($sqlStatements as $sql) {
             try {
